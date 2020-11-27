@@ -9,7 +9,7 @@ export const Slot = (props) => {
   }
 
   return (
-    <div className="col card col-2">
+    <div className="card">
       <Card card={props.card} covered={false}/>
       <button className="btn btn-primary" onClick={handleSelectClick}>Select</button>
     </div>

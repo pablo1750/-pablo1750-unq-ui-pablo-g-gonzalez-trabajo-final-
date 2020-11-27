@@ -1,12 +1,18 @@
 import React from 'react';
-import { Card } from './Cards';
+import { Card, coveredCard, emptyCard } from './Cards';
 
 export const Choice = (props) => {
   return (
-    <>
-    {props.card && 
-      <Card card={props.card} covered={!props.show}/>
+    <div style={{width: "100px"}}>
+    {props.card && !props.show &&
+      <Card card={coveredCard}/>
     }
-    </>
+    {props.card && props.show &&
+      <Card card={props.card}/>
+    }
+    {!props.card && 
+      <Card card={emptyCard}/>
+    }
+    </div>
   )
 }

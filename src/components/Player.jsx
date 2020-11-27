@@ -4,28 +4,34 @@ import { Choice } from './Choice';
 import { Score } from './Score';
 import { Slot } from './Slot';
 
-export const Player = (props) => {
-  const[data, setData] = useState({
-    cardSelected: emptyCard,
-    show: false,
+export const USER_TYPE = {
+  CPU: 0,
+  HUMAN: 1
+}
+
+export const playerEmpty = (readonly) => {
+  return {
+    ok: false,
+    name : "",
+    victories : 0,
+    score : 0,
+    readonly : readonly,
+    type: USER_TYPE.HUMAN,
     turn: false,
-  });
-
-  const handleCardSelect = (card) => {
-    console.log(card)
-    setData({...data, cardSelected: card})
-
+    choices: [],
+    cardSelected: undefined,
+    show: false,
   }
+}
+
+
+export const Player = (props) => {
 
   return (
-    <>
+    <div>
       <Score/>
-      <h3>{props.name}</h3>
-      <Choice card={data.cardSelected} show={data.show} />
-      <div className="row" >
-        { cards.map(card => <Slot key={card.name} card={card}  onSelect={handleCardSelect}/> ) }
-      </div>
-
-    </>
+      <span style={{fontWeight: props.data.turn ? "bold" : "normal"}}>{props.data.name}</span>
+      <Choice card={props.data.cardSelected} show={props.data.show} />
+    </div>
   )
 }

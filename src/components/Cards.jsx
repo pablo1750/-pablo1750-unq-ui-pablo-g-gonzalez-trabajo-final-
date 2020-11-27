@@ -74,28 +74,12 @@ export const whoWins = (card1, card2) => {
 }
 
 export const Card = (props) => {
-  
-  if (!props.card) return (
-    <div>
-      <img src={emptyCard.image}/>
-      <h3>Empty</h3>
-    </div>
-  )
-
   return (
     <>
-      {props.covered &&
-        <div>
-          <img src={coveredCard.image}/>
-          <h3>Covered</h3>
-        </div>
-      }
-      {!props.covered &&
-        <div>
-          <img src={props.card.image}/>
-          <h3>{props.card.name}</h3>
-        </div>
-      }
-    </>
+      <div className="card">
+        <img src={props.card.image} style={{width: "100%"}}/>
+        <span>{props.card.name}</span>
+      </div>
+   </>
   )
 }
