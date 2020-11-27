@@ -20,11 +20,22 @@
 }
 
 .hidden, .game-settings, .game-board, .cards-panel {
-  display: none !important;
-  transition: display 0.5s linear !important;
+  transition: transform 0.1s   ease-out !important;
+  transform: scaleY(0) translateY(50%);
+
 }
 
 .hidden.open, .game-settings.open, .game-board.open, .cards-panel.open  {
-  display: block !important;
-  transition: display 0.5s linear !important;
+  transition: transform 0.1s ease-out !important;
+  transform: unset;
+}
+
+@keyframes grow {
+  0% { font-size: 0; }
+  100% { font-size: 40px; }
+}
+
+.demo:hover .grows {
+  animation-name: grow;
+  animation-duration: 3s;
 }
