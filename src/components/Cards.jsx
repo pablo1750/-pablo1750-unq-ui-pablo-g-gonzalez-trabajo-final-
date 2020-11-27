@@ -3,7 +3,7 @@
 import React from 'react';
 
 export const coveredCard =   {
-  name: "Empty", 
+  name: "Covered", 
   beat: [
     { card: "", message: "" },
     { card: "", message: "" },
@@ -12,7 +12,7 @@ export const coveredCard =   {
 };
 
 export const emptyCard =   {
-  name: "Covered", 
+  name: "Empty", 
   beat: [
     { card: "", message: "" },
     { card: "", message: "" },

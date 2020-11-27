@@ -1,6 +1,7 @@
 import React from 'react';
 
-export const Score = (props) => {
+export const Scores = (props) => {
+
   return (
     <>
     

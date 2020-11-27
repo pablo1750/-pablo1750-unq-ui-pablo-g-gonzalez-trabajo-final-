@@ -24,12 +24,12 @@ export const Session = (props) => {
   useEffect(() => { 
     //update every players settings ok for start
     setOk(data.playersSlots.every((player, index) => player.ok));
-  }, [data] );
+  }, [data.playersSlots] );
 
   useEffect(() => {
     //update end of round
     setData({
-      ...data, endRound: isEndRound()
+      ...data, endRound: data.current != null && !(data.current in data.playersSlots)
     });
   }, [data.current] );
 
@@ -40,10 +40,6 @@ export const Session = (props) => {
 
   }, [data.endRound] );
 
-  const isEndRound = () => {
-    return data.current != null && !(data.current in data.playersSlots);
-  }
-
   const nextTurn = () => {
     return data.current + 1;
   }
@@ -53,18 +49,11 @@ export const Session = (props) => {
   }
 
   const handleConfirmPlayer = (index, player) =>{
-    setData(data => {
-      const players = data.playersSlots.map((item, j) => {
-        if (j === index) {
-          return player;
-        } else {
-          return item;
-        }
-      });
- 
-      return {
-        ...data, playersSlots: players
-      };
+    setData({
+      ...data, 
+      playersSlots: data.playersSlots.map((item, j) => {
+        return (j === index) ? player : item;
+      })
     });
   };
 
@@ -73,8 +62,13 @@ export const Session = (props) => {
   }
 
   const handleCardSelect = (card) => {
-    console.log(card)
-    setData({...data, cardSelected: card, current: nextTurn()})
+    setData({
+      ...data, 
+      playersSlots: data.playersSlots.map((item, j) => {
+        return (j === data.current) ? {...item, cardSelected: card} : item;
+      }),
+      current: nextTurn()
+    });
   }
 
   const handleStart = () => {
@@ -85,13 +79,17 @@ export const Session = (props) => {
     setData(emptySession);
   }
 
-  
+  const handleExitBoard = () => {
+    setData({...data, start: false, current: null});
+  }  
 
   return (
     <>
       <div className="container">
         <div className="row">
-          <div className="col-2">
+
+          {!data.start && 
+          <div className="col-12">
             <ul className="list-group">
               {data.playersSlots.map((player, index) => {
                 return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
@@ -104,18 +102,23 @@ export const Session = (props) => {
               })}
               {(!data.start && ok) && <li className="list-group-item"><button onClick={handleAddPlayerSlot}>Add Player</button></li>}
               {(!data.start && ok) && <li className="list-group-item"><button onClick={handleStart}>Start</button></li>}
-              {data.start && <li className="list-group-item"><button onClick={handleRestart}>Restart Game</button></li>}
+              <li className="list-group-item"><button onClick={handleRestart}>Restart Game</button></li>
             </ul>
-          </div>
-          <div className="col-10">
+          </div>}
+
+          {data.start && 
+          <div className="col-12">
+            <button onClick={handleExitBoard}>Exit board</button>
             <div className="row">
-                {data.playersSlots.filter((player, index) => player.ok).map((player, index)  => <Player data={player} turn={index == data.current} /> )}
+                {data.playersSlots.map((player, index)  => player.ok && <Player key={`playerSession-${index}`} data={player} turn={index == data.current} /> )}
             </div>         
             <div className="row">
               { cards.map(card => <div className="col col-2" key={`slot_${card.name}`}><Slot card={card} onSelect={() => handleCardSelect(card)}/></div> ) } 
             </div>
-          </div>
+          </div>}
+
           {data.endRound && <div className="alert alert-success">End Round</div>}
+
         </div>
       </div>
     </>
