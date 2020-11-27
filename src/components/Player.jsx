@@ -24,13 +24,11 @@ export const playerEmpty = (readonly) => {
   }
 }
 
-
 export const Player = (props) => {
-
   return (
     <div>
       <Score/>
-      <span style={{fontWeight: props.data.turn ? "bold" : "normal"}}>{props.data.name}</span>
+      <span style={{fontWeight: props.turn ? "bold" : "normal"}}>{props.data.name}</span>
       <Choice card={props.data.cardSelected} show={props.data.show} />
     </div>
   )
