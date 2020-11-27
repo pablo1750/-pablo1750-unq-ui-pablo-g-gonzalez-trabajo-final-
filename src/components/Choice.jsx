@@ -3,7 +3,7 @@ import { Card, coveredCard, emptyCard } from './Cards';
 
 export const Choice = (props) => {
   return (
-    <div style={{width: "100px"}}>
+    <div style={{width: "100%"}}>
     {props.card && !props.show &&
       <Card card={coveredCard}/>
     }

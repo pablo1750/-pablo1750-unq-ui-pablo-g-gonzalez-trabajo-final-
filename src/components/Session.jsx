@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { cards } from './Cards';
+import { cards, emptyCard } from './Cards';
 import { Player, playerEmpty } from './Player';
 import { PlayerConfig } from './PlayerConfig';
 import { Slot } from './Slot';
+
+export const SESSION_STATE = {
+  CONFIG: 0,
+  START: 1,
+  END_ROUND: 2,
+  SHOW_CARDS: 3,
+  SHOW_RESULTS: 4
+}
 
 export const emptySession = {
     playersSlots: [
@@ -12,7 +20,7 @@ export const emptySession = {
     start: false,
     current: null,
     endRound: false,
-    
+    state: SESSION_STATE.CONFIG
   }
 
 export const Session = (props) => {
@@ -27,10 +35,13 @@ export const Session = (props) => {
   }, [data.playersSlots] );
 
   useEffect(() => {
-    //update end of round
-    setData({
-      ...data, endRound: data.current != null && !(data.current in data.playersSlots)
-    });
+    //update end of round (si todos tienen carta seleccionada)
+    if(data.playersSlots.every(player => !!player.cardSelected)){
+      setData({
+        ...data, 
+        state : SESSION_STATE.END_ROUND
+      });
+    }
   }, [data.current] );
 
   useEffect(() => {
@@ -72,23 +83,47 @@ export const Session = (props) => {
   }
 
   const handleStart = () => {
-    setData({...data, start: true, current : 0});
+    setData({...data, state: SESSION_STATE.START, current : 0});
   }
 
+  const handleShowCards = () => {
+    setData({...data, state: SESSION_STATE.SHOW_CARDS});
+    setTimeout(()=>{handleShowResults()}, 1000)
+  }
+
+  const handleShowResults = () => {
+    setData({...data, state: SESSION_STATE.SHOW_RESULTS});
+  }
+
+  
   const handleRestart = () => {
     setData(emptySession);
   }
 
   const handleExitBoard = () => {
-    setData({...data, start: false, current: null});
+    setData({
+      ...data, 
+      state: SESSION_STATE.CONFIG,
+      current: null,
+      playersSlots: data.playersSlots.map(item => ({...item, cardSelected: undefined})) 
+    });
   }  
+
+  const handleNextRound = () => {
+    setData({
+      ...data, 
+      state: SESSION_STATE.START,
+      current: 0,
+      playersSlots: data.playersSlots.map(item => ({...item, cardSelected: undefined})) 
+    });
+  }
 
   return (
     <>
       <div className="container">
         <div className="row">
 
-          {!data.start && 
+          {data.state == SESSION_STATE.CONFIG && 
           <div className="col-12">
             <ul className="list-group">
               {data.playersSlots.map((player, index) => {
@@ -100,25 +135,27 @@ export const Session = (props) => {
                   {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
                 </li>
               })}
-              {(!data.start && ok) && <li className="list-group-item"><button onClick={handleAddPlayerSlot}>Add Player</button></li>}
-              {(!data.start && ok) && <li className="list-group-item"><button onClick={handleStart}>Start</button></li>}
+              {ok && <li className="list-group-item"><button onClick={handleAddPlayerSlot}>Add Player</button></li>}
+              {ok && <li className="list-group-item"><button onClick={handleStart}>Start</button></li>}
               <li className="list-group-item"><button onClick={handleRestart}>Restart Game</button></li>
             </ul>
           </div>}
 
-          {data.start && 
+          {data.state >= SESSION_STATE.START && 
           <div className="col-12">
             <button onClick={handleExitBoard}>Exit board</button>
+            {data.state == SESSION_STATE.END_ROUND && <button onClick={handleShowCards}>Show Cards</button>}
+            {data.state == SESSION_STATE.SHOW_RESULTS && <button onClick={handleNextRound}>Next Round</button>}
             <div className="row">
-                {data.playersSlots.map((player, index)  => player.ok && <Player key={`playerSession-${index}`} data={player} turn={index == data.current} /> )}
+                {data.playersSlots.map((player, index)  => player.ok && <Player key={`playerSession-${index}`} data={player} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} /> )}
             </div>         
-            <div className="row">
-              { cards.map(card => <div className="col col-2" key={`slot_${card.name}`}><Slot card={card} onSelect={() => handleCardSelect(card)}/></div> ) } 
+            <div className={`cards-panel row fixed-bottom ${data.state < SESSION_STATE.END_ROUND ? "open" : ""}`}>
+              {cards.map(card => <div style={{width: (100/cards.length) + "%"}} key={`slot_${card.name}`}><Slot card={card} onSelect={() => handleCardSelect(card)}/></div> ) } 
             </div>
           </div>}
 
-          {data.endRound && <div className="alert alert-success">End Round</div>}
-
+          {data.state == SESSION_STATE.END_ROUND &&  <div className="alert alert-warning">End Round</div>}
+          
         </div>
       </div>
     </>

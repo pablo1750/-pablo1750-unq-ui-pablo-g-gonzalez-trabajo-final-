@@ -1,3 +1,29 @@
 .App {
   text-align: center;
 }
+
+.player{
+  width: 120px;
+  height: 240px;
+}
+.player-active{
+  margin: 5px;
+}
+
+.player-inactive{
+  margin: 10px;
+  zoom: 0.9;
+}
+
+.cards-panel{
+  transition:  margin .5s;
+  margin: 0 0 -500px 0 !important;
+}
+
+.cards-panel.open{
+  margin: 0 0 0 0 !important;
+}
+
+.card-name{
+  font-size: 10px;
+}
