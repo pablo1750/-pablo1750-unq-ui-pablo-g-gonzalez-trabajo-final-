@@ -15,15 +15,16 @@
   zoom: 0.9;
 }
 
-.cards-panel{
-  transition:  margin .5s;
-  margin: 0 0 -500px 0 !important;
-}
-
-.cards-panel.open{
-  margin: 0 0 0 0 !important;
-}
-
 .card-name{
   font-size: 10px;
+}
+
+.hidden, .game-settings, .game-board, .cards-panel {
+  display: none !important;
+  transition: display 0.5s linear !important;
+}
+
+.hidden.open, .game-settings.open, .game-board.open, .cards-panel.open  {
+  display: block !important;
+  transition: display 0.5s linear !important;
 }

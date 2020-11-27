@@ -121,38 +121,38 @@ export const Session = (props) => {
   return (
     <>
       <div className="container">
+
+        <div className={`row game-settings ${data.state == SESSION_STATE.CONFIG ? "open" : ""}`}>
+          <ul className="list-group col-12">
+            {data.playersSlots.map((player, index) => {
+              return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
+            })}
+            {data.playersSlots.map((player, index) => {
+              return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
+                <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer}/>
+                {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
+              </li>
+            })}
+            {ok && <li className="list-group-item"><button onClick={handleAddPlayerSlot}>Add Player</button></li>}
+            {ok && <li className="list-group-item"><button onClick={handleStart}>Start</button></li>}
+            <li className="list-group-item"><button onClick={handleRestart}>Restart Game</button></li>
+          </ul>
+        </div>
+
         <div className="row">
 
-          {data.state == SESSION_STATE.CONFIG && 
-          <div className="col-12">
-            <ul className="list-group">
-              {data.playersSlots.map((player, index) => {
-                return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
-              })}
-              {data.playersSlots.map((player, index) => {
-                return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
-                  <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer}/>
-                  {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
-                </li>
-              })}
-              {ok && <li className="list-group-item"><button onClick={handleAddPlayerSlot}>Add Player</button></li>}
-              {ok && <li className="list-group-item"><button onClick={handleStart}>Start</button></li>}
-              <li className="list-group-item"><button onClick={handleRestart}>Restart Game</button></li>
-            </ul>
-          </div>}
-
-          {data.state >= SESSION_STATE.START && 
-          <div className="col-12">
+          <div className={`col-12 game-board ${data.state >= SESSION_STATE.START ? "open" : ""}`}>
             <button onClick={handleExitBoard}>Exit board</button>
             {data.state == SESSION_STATE.END_ROUND && <button onClick={handleShowCards}>Show Cards</button>}
             {data.state == SESSION_STATE.SHOW_RESULTS && <button onClick={handleNextRound}>Next Round</button>}
             <div className="row">
                 {data.playersSlots.map((player, index)  => player.ok && <Player key={`playerSession-${index}`} data={player} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} /> )}
             </div>         
-            <div className={`cards-panel row fixed-bottom ${data.state < SESSION_STATE.END_ROUND ? "open" : ""}`}>
-              {cards.map(card => <div style={{width: (100/cards.length) + "%"}} key={`slot_${card.name}`}><Slot card={card} onSelect={() => handleCardSelect(card)}/></div> ) } 
-            </div>
-          </div>}
+          </div>
+
+          <div className={`cards-panel row ${data.state >= SESSION_STATE.START && data.state < SESSION_STATE.END_ROUND ? "open" : ""}`}>
+            {cards.map(card => <div style={{width: (100/cards.length) + "%"}} key={`slot_${card.name}`}><Slot card={card} onSelect={() => handleCardSelect(card)}/></div> ) } 
+          </div>
 
           {data.state == SESSION_STATE.END_ROUND &&  <div className="alert alert-warning">End Round</div>}
           
