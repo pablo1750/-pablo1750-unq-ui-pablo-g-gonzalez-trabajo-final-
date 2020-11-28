@@ -5,13 +5,13 @@ export const Choice = (props) => {
   return (
     <div style={{width: "100%"}}>
     {props.card && !props.show &&
-      <Card card={coveredCard}/>
+      <Card card={coveredCard} width="100px"/>
     }
     {props.card && props.show &&
-      <Card card={props.card}/>
+      <Card card={props.card} width="100px"/>
     }
     {!props.card && 
-      <Card card={emptyCard}/>
+      <Card card={emptyCard} width="100px"/>
     }
     </div>
   )

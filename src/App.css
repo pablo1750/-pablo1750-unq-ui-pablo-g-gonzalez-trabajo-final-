@@ -7,35 +7,15 @@
   height: 240px;
 }
 .player-active{
-  margin: 5px;
+  margin: 4px;
 }
 
 .player-inactive{
-  margin: 10px;
-  zoom: 0.9;
+  margin: 5px;
+  zoom: 0.98;
 }
 
 .card-name{
   font-size: 10px;
 }
 
-.hidden, .game-settings, .game-board, .cards-panel {
-  transition: transform 0.1s   ease-out !important;
-  transform: scaleY(0) translateY(50%);
-
-}
-
-.hidden.open, .game-settings.open, .game-board.open, .cards-panel.open  {
-  transition: transform 0.1s ease-out !important;
-  transform: unset;
-}
-
-@keyframes grow {
-  0% { font-size: 0; }
-  100% { font-size: 40px; }
-}
-
-.demo:hover .grows {
-  animation-name: grow;
-  animation-duration: 3s;
-}

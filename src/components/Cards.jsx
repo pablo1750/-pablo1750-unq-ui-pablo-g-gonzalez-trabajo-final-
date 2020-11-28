@@ -76,10 +76,8 @@ export const whoWins = (card1, card2) => {
 export const Card = (props) => {
   return (
     <>
-      <div className="card" style={{width: "100%"}}>
-        <img src={props.card.image} style={{width: "100%"}} class="card-img-top" alt="card-image"/>
-        <div className="card-footer text-muted card-name p-1 m-0">{props.card.name}</div>
-        
+      <div className="card" style={{width: props.width ? props.width : "100%"}}>
+        <img src={props.card.image} style={{width: "100%"}} class="card-img-top" alt="card-image"/>       
       </div>
    </>
   )
