@@ -28,3 +28,23 @@
   position:relative;animation:animatebottom 0.4s
 }
 @keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
+
+@keyframes blink {
+  0% { box-shadow: 0 0 20px white; }
+  50% { box-shadow: 0 0 10px white; }
+  100% { box-shadow: 0 0 20px white; }
+}
+
+@-webkit-keyframes blink {
+  0% { box-shadow: 0 0 15px white; }
+  50% { box-shadow: 0 0 10px white;; }
+  100% { box-shadow: 0 0 15px white; }
+}
+
+.blink {
+  -webkit-animation: blink 1.5s linear infinite;
+  -moz-animation: blink 1.5s linear infinite;
+  -ms-animation: blink 1.5s linear infinite;
+  -o-animation: blink 1.5s linear infinite;
+  animation: blink 3.5s linear infinite;
+}

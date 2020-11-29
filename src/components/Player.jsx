@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Choice } from './Choice';
 
 export const USER_TYPE = {
@@ -30,17 +30,42 @@ export const playerEmpty = (readonly) => {
 }
 
 export const Player = (props) => {
+  const [choising, setChoising] = useState(false);
+
+  useEffect(() => {
+    setChoising(false);
+  }, [props.status]);
+
+
+  const onChoiceClick = () => {
+    setChoising(true);
+    props.onReady();
+  }
+
   return (
-    <div className={`card text-white ${props.turn ? "bg-primary" : "bg-secondary"}`}>
+    <div className={`card text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink"}`}>
       <div className="card-header">
         {props.data.name} {props.data.victories > 0 && <span class="badge badge-primary badge-pill" title="victories">{props.data.victories}</span>}
       </div>
       <div className="card-body">
-        <p className="card-text">
+        
+        {props.data.status == PLAYER_STATUS.PLAYING &&
+          <div className="alert alert-info">Playing</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
+          <div className="alert alert-success">Winner ({props.data.score})</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_LOST &&
+          <div className="alert alert-danger">Loser ({props.data.score})</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_TIED &&
+          <div className="alert alert-success">Tied ({props.data.score})</div>
+        }
+        <div className="card-text text-center mb-3">
           <Choice card={props.data.cardSelected} show={props.show} />
-        </p>
+        </div>
         {props.data.type === USER_TYPE.HUMAN && props.turn &&
-          <button className="btn btn-success" onClick={props.onReady} disabled={!props.turn}>
+          <button className="btn btn-success" onClick={onChoiceClick} disabled={!props.turn}>
             Choice {props.readyCountDown > 0 && <span>({props.readyCountDown})</span>}
           </button>
         }
@@ -55,18 +80,6 @@ export const Player = (props) => {
           <button className="btn btn-success" onClick={props.onReady} disabled>
             Waiting
           </button>
-        }
-        {props.data.status == PLAYER_STATUS.PLAYING &&
-          <div className="alert alert-info">Playing</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
-          <div className="alert alert-success">Winner ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_LOST &&
-          <div className="alert alert-danger">Loser ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_TIED &&
-          <div className="alert alert-success">Tied ({props.data.score})</div>
         }
       </div>
     </div>

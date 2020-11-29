@@ -79,7 +79,7 @@ export const Card = (props) => {
   return (
     <>
       <div className="card" style={{width: props.width ? props.width : "100%"}}>
-        <img src={props.card.image} style={{width: "100%"}} class="card-img-top" alt="card-image"/>       
+        <img src={props.card.image} style={{width: "100%"}} className="rounded mx-auto d-block " alt="card-image"/>       
       </div>
    </>
   )

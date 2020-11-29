@@ -270,7 +270,7 @@ export const Session = (props) => {
                 </div>   
 
                 {data.playersSlots.map((player, index) => player.ok && 
-                  <div className="col-6 col-md-4 col-lg-2">
+                  <div className="col-6 col-md-4 col-lg-2 mb-3">
                   <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
                   </div>
                 )}  
