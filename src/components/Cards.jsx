@@ -63,6 +63,8 @@ export const cards = [
   },
 ];
 
+export const cardBeatTo = (card1, card2) => card1.beat.some(b => b.card == card2.name);
+
 export const whoWins = (card1, card2) => {
   if(card1.beat.any(card => card.name == card2.name)){
     return card1;
