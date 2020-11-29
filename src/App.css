@@ -2,19 +2,6 @@
   text-align: center;
 }
 
-.player{
-  width: 120px;
-  height: 240px;
-}
-.player-active{
-  margin: 4px;
-}
-
-.player-inactive{
-  margin: 5px;
-  zoom: 0.98;
-}
-
 .card-name{
   font-size: 10px;
 }
@@ -30,14 +17,14 @@
 @keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
 
 @keyframes blink {
-  0% { box-shadow: 0 0 20px white; }
-  50% { box-shadow: 0 0 10px white; }
-  100% { box-shadow: 0 0 20px white; }
+  0% { box-shadow: 0 0 15px rgb(240, 188, 19); }
+  50% { box-shadow: 0 0 5px  rgb(240, 188, 19); }
+  100% { box-shadow: 0 0 15px  rgb(240, 188, 19); }
 }
 
 @-webkit-keyframes blink {
   0% { box-shadow: 0 0 15px white; }
-  50% { box-shadow: 0 0 10px white;; }
+  50% { box-shadow: 0 0 5px white;; }
   100% { box-shadow: 0 0 15px white; }
 }
 
@@ -47,4 +34,8 @@
   -ms-animation: blink 1.5s linear infinite;
   -o-animation: blink 1.5s linear infinite;
   animation: blink 3.5s linear infinite;
+}
+
+.card.player.bg-primary{ 
+  box-shadow: 0 0 5px rgb(95, 115, 231); 
 }

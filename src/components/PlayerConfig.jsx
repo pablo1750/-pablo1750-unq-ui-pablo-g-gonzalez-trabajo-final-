@@ -12,7 +12,7 @@ export const PlayerConfig = (props) => {
       setError(true);
       return;
     }
-    playerConfirm();
+    props.onConfirmPlayer(props.slotIndex, {...data, ok: true});
   }
   
   const handleNameChange = (event) => {
@@ -27,9 +27,6 @@ export const PlayerConfig = (props) => {
     setData({...data, name: "", type: USER_TYPE.HUMAN});
   }
   
-  const playerConfirm = () => {
-    props.onConfirmPlayer(props.index, {...data, victories: 0, score: 0, ok: true, status: PLAYER_STATUS.PLAYING, cardSelected: undefined});
-  }
 
   return (
     <>
@@ -37,14 +34,14 @@ export const PlayerConfig = (props) => {
         <form className={`${error && "was-validated"}`} onSubmit={handleSubmit} noValidate>
 
           <div class="input-group input-group-sm">
-            <div className="input-group-prepend"><span className="input-group-text"> Player {props.index+1}</span></div>
+            <div className="input-group-prepend"><span className="input-group-text">Player</span></div>
             <input className="form-control" placeholder="Name" value={data.name} autofocus tabIndex="0" disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required/>
             
             <div class="input-group-append">
               {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
               {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
               <button type="submit" className="btn btn-outline-success">Confirm</button>
-          {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer(props.index)}>Cancel</button>}
+              {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer(props.data)}>Cancel</button>}
             </div>
           </div>
             <div class="invalid-feedback">

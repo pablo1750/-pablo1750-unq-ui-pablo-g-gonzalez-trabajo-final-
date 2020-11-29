@@ -78,8 +78,8 @@ export const whoWins = (card1, card2) => {
 export const Card = (props) => {
   return (
     <>
-      <div className="card" style={{width: props.width ? props.width : "100%"}}>
-        <img src={props.card.image} style={{width: "100%"}} className="rounded mx-auto d-block " alt="card-image"/>       
+      <div className="card" style={{width: "100%", textAlign: "center", backgroundColor: "rgba(255, 255, 255, 0.192)"}} >
+        <img src={props.card.image} style={{width: props.width ? props.width : "100%"}} className="rounded mx-auto d-block p-1 m-0" alt="card-image"/>       
       </div>
    </>
   )

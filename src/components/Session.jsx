@@ -19,29 +19,28 @@ export const emptySession = {
       playerEmpty(true),
       playerEmpty(true),
     ],
+    players: [],
     start: false,
     current: null,
-    endRound: false,
     state: SESSION_STATE.CONFIG,
-    roundHasWinner: false
+    roundHasWinner: false,
+    playersCounter: 0
   }
 
 export const Session = (props) => {
 
   const [data, setData] = useState(emptySession);
-  
   const [ok, setOk] = useState(false);
-  const [playerReadyCountDown, setPlayerReadyCountDown] = useState(0);
 
   useEffect(() => { 
     //update every players settings ok for start
-    setOk(data.playersSlots.every((player, index) => player.ok));
+    setOk(data.playersSlots.length === 0);
   }, [data.playersSlots] );
 
   useEffect(() => {
 
     //update end of round (si todos los jugadores en estado PLAYING tienen carta seleccionada)
-    if(data.playersSlots.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
+    if(data.players.length > 0 && data.players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
       setData({
         ...data, 
         state : SESSION_STATE.END_ROUND
@@ -50,13 +49,13 @@ export const Session = (props) => {
     }
 
     //si el usuario actual no esta jugando porque perdio le pongo una carga cubierta
-    if( data.current in data.playersSlots && data.playersSlots[data.current].status === PLAYER_STATUS.ROUND_LOST) {
+    if( data.current in data.players && data.players[data.current].status === PLAYER_STATUS.ROUND_LOST) {
       handleCardSelect(coveredCard);
       return;
     }
 
     //si el usuario actual es la maquina, dejo un tiempo de espera para que parezca que la cpu esta pensando antes de decidir
-    if( data.current in data.playersSlots && data.playersSlots[data.current].type === USER_TYPE.CPU) {
+    if( data.current in data.players && data.players[data.current].type === USER_TYPE.CPU) {
       handlePlayerReady();
       setTimeout(() => {
         handleCardSelect(cards[getRandomInt(0,5)]);;
@@ -64,27 +63,39 @@ export const Session = (props) => {
     }
   }, [data.current] );
 
-  useEffect(() => {
-    if(data.endRound){
-      alert("end round")
-    }
-
-  }, [data.endRound] );
-
   const nextTurn = () => {
     return data.current + 1;
   }
 
-  const handleRemovePlayer = (index) => {
-    setData({...data, playersSlots: data.playersSlots.filter((player, j) => j !== index)});
+  const handleRemovePlayer = (player) => {
+    setData({...data, players: data.players.filter(item => item !== player)});
   }
 
+  const handleRemovePlayerSlot = (slot) => {
+    setData({...data, playersSlots: data.playersSlots.filter(item => item !== slot)});
+  }
+
+  /*
   const handleConfirmPlayer = (index, player) =>{
     setData({
       ...data, 
       playersSlots: data.playersSlots.map((item, j) => {
         return (j === index) ? player : item;
-      })
+      }),
+      playersCounter: data.playersCounter++
+    });
+  };
+  */
+
+  const handleConfirmPlayer = (slotIndex, player) =>{
+    setData({
+      ...data, 
+      players: [
+        ...data.players, 
+        {...player, index: data.playersCounter}
+      ],
+      playersCounter: data.playersCounter + 1,
+      playersSlots: data.playersSlots.filter((item, index) => index !== slotIndex)
     });
   };
 
@@ -117,7 +128,7 @@ export const Session = (props) => {
   const handleShowResults = () => {
 
 
-    const cardsSelected = data.playersSlots
+    const cardsSelected = data.players
       .filter(player => player.status == PLAYER_STATUS.PLAYING)
       .map(player => player.cardSelected);
 
@@ -139,12 +150,12 @@ export const Session = (props) => {
       ...data, 
       state: SESSION_STATE.SHOW_RESULTS,
       roundHasWinner: hasWinner,
-      playersSlots: data.playersSlots.map((player) => {
+      players: data.players.map((player) => {
         if(player.status !== PLAYER_STATUS.PLAYING){
           return player;
         }else{
           const score = scores.find(s => s.name === player.cardSelected.name).value
-          console.log({cardsSelected: cardsSelected, scores: scores, maxScore: maxScore, hasWinner: hasWinner, winnersStatus: winnersStatus, player: player, score: score});
+          //console.log({cardsSelected: cardsSelected, scores: scores, maxScore: maxScore, hasWinner: hasWinner, winnersStatus: winnersStatus, player: player, score: score});
           return {
             ...player, 
             score: score,
@@ -237,27 +248,28 @@ export const Session = (props) => {
             <>
               <div className="row" style={{minHeight: "55px"}}>
                 <div className="col col-12 mh-100">
-                  {ok && <button className="btn btn-primary m-1" onClick={handleStart}>Board</button>}
-                  {data.playersSlots.some(player => player.ok) > 0 && <button className="btn btn-danger m-1" onClick={handleRestart}>Restart</button>}
+                  {ok && <button className="btn btn-success m-1" onClick={handleStart}>Board</button>}
+                  {data.players.length > 0 && <button className="btn btn-danger m-1" onClick={handleRestart}>Restart</button>}
                 </div>   
               </div>
               <div className="row">
-                <div className="col col-2"> </div>
-                <div className="col col-8"> 
+                <div className="col col-2 d-none d-sm-none d-md-block"> </div>
+                <div className="col col-12 col-md-8 "> 
                   <ul className="list-group">
 
-                    {data.playersSlots.map((player, index) => {
-                      return player.ok && 
-                      <li className="list-group-item d-flex justify-content-between align-items-center" key={`playerOk-${index}`}>
+                    {data.players.map(player => 
+                      <li className="list-group-item d-flex justify-content-between align-items-center" key={`playerOk-${player.index}`}>
                         {player.name}
                         <span class="badge badge-secondary badge-pill">{player.victories}</span>
                       </li>
-                    })}
-                    {data.playersSlots.map((player, index) => {
-                      return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
-                        <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer} onCancelPlayer={handleRemovePlayer}/>
+                    )}
+
+                    {data.playersSlots.map((playerSlot, index) => 
+                      <li className="list-group-item" key={`playerSlot-${index}`}>
+                        <PlayerConfig data={playerSlot} slotIndex={index} onConfirmPlayer={handleConfirmPlayer} onCancelPlayer={handleRemovePlayerSlot}/>
                       </li>
-                    })}
+                    )}
+
                     {ok && 
                       <li className="list-group-item">
                         <button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button>
@@ -265,7 +277,7 @@ export const Session = (props) => {
                     }
                   </ul>  
                 </div>
-                <div className="col col-2"> </div>
+                <div className="col col-2 d-none d-sm-none d-md-block"> </div>
               </div>
             </>
           }
@@ -283,7 +295,7 @@ export const Session = (props) => {
                 </div>   
               </div>
               <div className="row">
-                {data.playersSlots.map((player, index) => player.ok && 
+                {data.players.map((player, index) => player.ok && player.status != PLAYER_STATUS.ROUND_LOST &&
                   <div className="col-6 col-md-4 col-lg-2 mb-3">
                     <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
                   </div>

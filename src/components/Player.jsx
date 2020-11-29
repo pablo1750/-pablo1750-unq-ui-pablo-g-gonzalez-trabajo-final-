@@ -16,6 +16,7 @@ export const PLAYER_STATUS = {
 export const playerEmpty = (readonly) => {
   return {
     ok: false,
+    index: 0,
     name : "",
     victories : 0,
     score : 0,
@@ -43,7 +44,7 @@ export const Player = (props) => {
   }
 
   return (
-    <div className={`card text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink bg-warning"}`}>
+    <div className={`card player text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink bg-warning"}`} style={{minWidth: "160px"}}>
       <div className="card-header">
         {props.data.name} {props.data.victories > 0 && <span class="badge badge-primary badge-pill" title="victories">{props.data.victories}</span>}
       </div>
