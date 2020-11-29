@@ -24,6 +24,7 @@ export const emptySession = {
     endRound: false,
     state: SESSION_STATE.CONFIG,
     roundHasWinner: false,
+    playerReadyCountDown: 0,
   }
 
 export const Session = (props) => {
@@ -50,10 +51,7 @@ export const Session = (props) => {
 
     //si el usuario actual no esta jugando porque perdio le pongo una carga cubierta
     if( data.current in data.playersSlots && data.playersSlots[data.current].status === PLAYER_STATUS.ROUND_LOST) {
-      handlePlayerReady();
-      setTimeout(() => {
-        handleCardSelect(coveredCard);;
-      }, 10);
+      handleCardSelect(coveredCard);
       return;
     }
 
@@ -65,7 +63,19 @@ export const Session = (props) => {
       }, 500);
     }
 
+    //si el usuario actual es humano, dejo un tiempo de espera para que el usuario diga qu e va a elegir
+    if( data.current in data.playersSlots && data.playersSlots[data.current].type === USER_TYPE.HUMAN) {
+      
+      data.playerReadyCountDown = 3;
+      const interv = setInterval(() => {
+        data.playerReadyCountDown--;
+        if(data.playerReadyCountDown==0){
+          handlePlayerReady();
+          clearInterval(interv);
+        }
+      }, 1000)
 
+    }
 
   }, [data.current] );
 
@@ -173,7 +183,15 @@ export const Session = (props) => {
       ...data, 
       state: SESSION_STATE.CONFIG,
       current: null,
-      playersSlots: data.playersSlots.map(item => ({...item, cardSelected: undefined})) 
+      playersSlots: data.playersSlots.map(player => ({
+        ...player, 
+        //deselecciono la carta
+        cardSelected: undefined, 
+        //reinicio el score
+        score: 0, 
+        //si no hubo ganador y est jugador perdio, no juega la siguiente ronda
+        status: !data.roundHasWinner && player.status === PLAYER_STATUS.ROUND_LOST ? player.status : PLAYER_STATUS.PLAYING,
+      })) 
     });
   }  
   
@@ -215,7 +233,7 @@ export const Session = (props) => {
     Swal.fire({
       title: 'RPSLS!',
       html: 'All players have chosen.',
-      timer: 1500,
+      timer: 1000,
       timerProgressBar: true,
       willOpen: () => {
         Swal.showLoading()
@@ -230,23 +248,29 @@ export const Session = (props) => {
   return (
     <>
         {data.state == SESSION_STATE.CONFIG &&
-          <div className="row game-settings open fixed-top">
-            <ul className="list-group col-12">
-              {data.playersSlots.map((player, index) => {
-                return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
-              })}
-              {data.playersSlots.map((player, index) => {
-                return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
-                  <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer}/>
-                  {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
-                </li>
-              })}
-              <li className="list-group-item">
-                {ok && <button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button>}
-                {ok && <button className="btn btn-primary" onClick={handleStart}>Start</button>}
-                <button className="btn btn-primary" onClick={handleRestart}>Restart Game</button>
-              </li>
-            </ul>
+          <div className="container">
+            <div className="row">
+              <div className="col col-2"> </div>
+              <div className="col col-8"> 
+                <ul className="list-group">
+                  {data.playersSlots.map((player, index) => {
+                    return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
+                  })}
+                  {data.playersSlots.map((player, index) => {
+                    return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
+                      <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer}/>
+                      {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
+                    </li>
+                  })}
+                  {ok && <li className="list-group-item"><button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button></li>}
+                  <li className="list-group-item">
+                    {ok && <button className="btn btn-primary" onClick={handleStart}>Start</button>}
+                    <button className="btn btn-primary" onClick={handleRestart}>Restart Game</button>
+                  </li>
+                </ul>  
+              </div>
+              <div className="col col-2"> </div>
+            </div>
           </div>
         }
 
@@ -262,7 +286,7 @@ export const Session = (props) => {
 
               {data.playersSlots.map((player, index) => player.ok && 
                 <div className="col-6 col-md-4 col-lg-2">
-                <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} />
+                <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
                 </div>
               )}  
             </div>

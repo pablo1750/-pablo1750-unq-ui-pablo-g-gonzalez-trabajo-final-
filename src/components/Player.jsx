@@ -41,7 +41,7 @@ export const Player = (props) => {
         </p>
         {props.data.type === USER_TYPE.HUMAN && props.turn &&
           <button className="btn btn-success" onClick={props.onReady} disabled={!props.turn}>
-            Ready?
+            Choice {props.readyCountDown > 0 && <span>({props.readyCountDown})</span>}
           </button>
         }
         {props.data.type === USER_TYPE.CPU && props.turn &&
