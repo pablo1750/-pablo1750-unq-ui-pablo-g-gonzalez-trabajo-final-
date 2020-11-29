@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { playerEmpty, PLAYER_STATUS, USER_TYPE } from './Player';
+import { PLAYER_STATUS, USER_TYPE } from './Player';
 
 export const PlayerConfig = (props) => {
 
@@ -36,18 +36,20 @@ export const PlayerConfig = (props) => {
       {
         <form className={`${error && "was-validated"}`} onSubmit={handleSubmit} noValidate>
 
-          <div class="form-group m-1">
-            <label for="name">Player {props.index}</label>
-            <input className="form-control" id="name" placeholder="Name" value={data.name} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required/>
+          <div class="input-group input-group-sm">
+            <div className="input-group-prepend"><span className="input-group-text"> Player {props.index+1}</span></div>
+            <input className="form-control" placeholder="Name" value={data.name} autofocus tabIndex="0" disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required/>
+            
+            <div class="input-group-append">
+              {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
+              {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
+              <button type="submit" className="btn btn-outline-success">Confirm</button>
+          {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer(props.index)}>Cancel</button>}
+            </div>
+          </div>
             <div class="invalid-feedback">
               Please choose a name.
             </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary m-1">Confirm</button>
-          {data.type == USER_TYPE.CPU && <button className="btn btn-secondary m-1" onClick={handleHumanClick}>HUMAN</button>}
-          {data.type == USER_TYPE.HUMAN && <button className="btn btn-secondary m-1" onClick={handleCpuClick}>CPU</button>}
-          
         </form>
 
       }

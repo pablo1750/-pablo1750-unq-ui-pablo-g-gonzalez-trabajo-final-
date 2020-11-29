@@ -232,49 +232,64 @@ export const Session = (props) => {
   } 
   return (
     <>
-        
         <div className={`container overflow-auto ${data.state == SESSION_STATE.CONFIG && "w3-animate-top"}`}>
           {data.state == SESSION_STATE.CONFIG &&
-            <div className="row">
-              <div className="col col-2"> </div>
-              <div className="col col-8"> 
-                <ul className="list-group">
-                  {data.playersSlots.map((player, index) => {
-                    return player.ok && <li className="list-group-item" key={`playerOk-${index}`}><span>{player.name}</span></li>
-                  })}
-                  {data.playersSlots.map((player, index) => {
-                    return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
-                      <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer}/>
-                      {!player.readonly && <><button onClick={() => handleRemovePlayer(index)}>Remove</button></>}
-                    </li>
-                  })}
-                  {ok && <li className="list-group-item"><button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button></li>}
-                  <li className="list-group-item">
-                    {ok && <button className="btn btn-primary" onClick={handleStart}>Start</button>}
-                    <button className="btn btn-primary" onClick={handleRestart}>Restart Game</button>
-                  </li>
-                </ul>  
+            <>
+              <div className="row" style={{minHeight: "55px"}}>
+                <div className="col col-12 mh-100">
+                  {ok && <button className="btn btn-primary m-1" onClick={handleStart}>Board</button>}
+                  {data.playersSlots.some(player => player.ok) > 0 && <button className="btn btn-danger m-1" onClick={handleRestart}>Restart</button>}
+                </div>   
               </div>
-              <div className="col col-2"> </div>
-            </div>
+              <div className="row">
+                <div className="col col-2"> </div>
+                <div className="col col-8"> 
+                  <ul className="list-group">
+
+                    {data.playersSlots.map((player, index) => {
+                      return player.ok && 
+                      <li className="list-group-item d-flex justify-content-between align-items-center" key={`playerOk-${index}`}>
+                        {player.name}
+                        <span class="badge badge-secondary badge-pill">{player.victories}</span>
+                      </li>
+                    })}
+                    {data.playersSlots.map((player, index) => {
+                      return !data.start && !player.ok && <li className="list-group-item" key={`playerSlot-${index}`}>
+                        <PlayerConfig index={index} data={player} onRemovePlayer={handleRemovePlayer} onConfirmPlayer={handleConfirmPlayer} onCancelPlayer={handleRemovePlayer}/>
+                      </li>
+                    })}
+                    {ok && 
+                      <li className="list-group-item">
+                        <button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button>
+                      </li>
+                    }
+                  </ul>  
+                </div>
+                <div className="col col-2"> </div>
+              </div>
+            </>
           }
         </div>
 
         <div className={`container overflow-auto ${data.state >= SESSION_STATE.START && "w3-animate-top"}`}>
           {data.state >= SESSION_STATE.START &&
-              <div className="row">
-                <div className="col col-12">
+            <>
+              <div className="row" style={{minHeight: "55px"}}>
+                <div className="col col-12 mh-100">
                   <button className="btn btn-danger m-1" onClick={handleExitBoard}>Exit</button>
                   {data.state == SESSION_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
-                  {data.state == SESSION_STATE.SHOW_RESULTS && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
+                  {data.state == SESSION_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
+                  {data.state == SESSION_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
                 </div>   
-
+              </div>
+              <div className="row">
                 {data.playersSlots.map((player, index) => player.ok && 
                   <div className="col-6 col-md-4 col-lg-2 mb-3">
-                  <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
+                    <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
                   </div>
                 )}  
               </div>
+            </>
             
           }
         </div>

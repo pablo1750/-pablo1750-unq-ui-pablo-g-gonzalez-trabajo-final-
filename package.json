@@ -2,7 +2,7 @@
   "name": "rpsls",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pablo1750.github.io/-pablo1750-unq-ui-pablo-g-gonzalez-trabajo-final-",
+  "homepage": "https://pablo1750.github.io/unq-ui-pablo-g-gonzalez-trabajo-final/" ,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

@@ -43,24 +43,13 @@ export const Player = (props) => {
   }
 
   return (
-    <div className={`card text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink"}`}>
+    <div className={`card text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink bg-warning"}`}>
       <div className="card-header">
         {props.data.name} {props.data.victories > 0 && <span class="badge badge-primary badge-pill" title="victories">{props.data.victories}</span>}
       </div>
       <div className="card-body">
         
-        {props.data.status == PLAYER_STATUS.PLAYING &&
-          <div className="alert alert-info">Playing</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
-          <div className="alert alert-success">Winner ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_LOST &&
-          <div className="alert alert-danger">Loser ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_TIED &&
-          <div className="alert alert-success">Tied ({props.data.score})</div>
-        }
+
         <div className="card-text text-center mb-3">
           <Choice card={props.data.cardSelected} show={props.show} />
         </div>
@@ -76,11 +65,24 @@ export const Player = (props) => {
             </div> Choosing
           </button>
         }
-        {!props.turn &&
+        {!props.turn && false &&
           <button className="btn btn-success" onClick={props.onReady} disabled>
             Waiting
           </button>
         }
+        {props.data.status == PLAYER_STATUS.PLAYING && false &&
+          <div className="alert alert-info">Playing</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
+          <div className="alert alert-success m-1 p-1">Winner ({props.data.score})</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_LOST &&
+          <div className="alert alert-danger m-1 p-1">Loser ({props.data.score})</div>
+        }
+        {props.data.status == PLAYER_STATUS.ROUND_TIED &&
+          <div className="alert alert-success m-1 p-1">Tied ({props.data.score})</div>
+        }
+
       </div>
     </div>
   )

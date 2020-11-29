@@ -1,8 +1,8 @@
 import React from 'react';
-import { Menu } from './Menu';
+import { Session } from './Session';
 
 export const Game = (props) => {
   return (
-    <Menu />
+    <Session />
   )
 }
