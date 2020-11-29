@@ -19,3 +19,12 @@
   font-size: 10px;
 }
 
+.w3-animate-top{
+  position:relative;animation:animatetop 0.4s
+}
+@keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
+
+.w3-animate-bottom{
+  position:relative;animation:animatebottom 0.4s
+}
+@keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}

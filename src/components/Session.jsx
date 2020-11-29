@@ -23,8 +23,7 @@ export const emptySession = {
     current: null,
     endRound: false,
     state: SESSION_STATE.CONFIG,
-    roundHasWinner: false,
-    playerReadyCountDown: 0,
+    roundHasWinner: false
   }
 
 export const Session = (props) => {
@@ -32,6 +31,7 @@ export const Session = (props) => {
   const [data, setData] = useState(emptySession);
   
   const [ok, setOk] = useState(false);
+  const [playerReadyCountDown, setPlayerReadyCountDown] = useState(0);
 
   useEffect(() => { 
     //update every players settings ok for start
@@ -62,21 +62,6 @@ export const Session = (props) => {
         handleCardSelect(cards[getRandomInt(0,5)]);;
       }, 500);
     }
-
-    //si el usuario actual es humano, dejo un tiempo de espera para que el usuario diga qu e va a elegir
-    if( data.current in data.playersSlots && data.playersSlots[data.current].type === USER_TYPE.HUMAN) {
-      
-      data.playerReadyCountDown = 3;
-      const interv = setInterval(() => {
-        data.playerReadyCountDown--;
-        if(data.playerReadyCountDown==0){
-          handlePlayerReady();
-          clearInterval(interv);
-        }
-      }, 1000)
-
-    }
-
   }, [data.current] );
 
   useEffect(() => {
@@ -233,7 +218,7 @@ export const Session = (props) => {
     Swal.fire({
       title: 'RPSLS!',
       html: 'All players have chosen.',
-      timer: 1000,
+      timer: 500,
       timerProgressBar: true,
       willOpen: () => {
         Swal.showLoading()
@@ -247,8 +232,9 @@ export const Session = (props) => {
   } 
   return (
     <>
-        {data.state == SESSION_STATE.CONFIG &&
-          <div className="container">
+        
+        <div className={`container overflow-auto ${data.state == SESSION_STATE.CONFIG && "w3-animate-top"}`}>
+          {data.state == SESSION_STATE.CONFIG &&
             <div className="row">
               <div className="col col-2"> </div>
               <div className="col col-8"> 
@@ -271,29 +257,31 @@ export const Session = (props) => {
               </div>
               <div className="col col-2"> </div>
             </div>
-          </div>
-        }
+          }
+        </div>
 
-        {data.state >= SESSION_STATE.START &&
+        <div className={`container overflow-auto ${data.state >= SESSION_STATE.START && "w3-animate-top"}`}>
+          {data.state >= SESSION_STATE.START &&
+              <div className="row">
+                <div className="col col-12">
+                  <button className="btn btn-danger m-1" onClick={handleExitBoard}>Exit</button>
+                  {data.state == SESSION_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
+                  {data.state == SESSION_STATE.SHOW_RESULTS && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
+                </div>   
 
-          <div className="container overflow-auto">
-            <div className="row">
-              <div className="col col-12">
-                <button className="btn btn-danger m-1" onClick={handleExitBoard}>Exit board</button>
-                {data.state == SESSION_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
-                {data.state == SESSION_STATE.SHOW_RESULTS && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
-              </div>   
+                {data.playersSlots.map((player, index) => player.ok && 
+                  <div className="col-6 col-md-4 col-lg-2">
+                  <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
+                  </div>
+                )}  
+              </div>
+            
+          }
+        </div>
 
-              {data.playersSlots.map((player, index) => player.ok && 
-                <div className="col-6 col-md-4 col-lg-2">
-                <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
-                </div>
-              )}  
-            </div>
-          </div>
-        }
-        {data.state === SESSION_STATE.PLAYER_READY &&
-          <div className="container fixed-bottom">
+        <div className={`container fixed-bottom overflow-auto ${data.state === SESSION_STATE.PLAYER_READY && "w3-animate-bottom"}`}>
+          {data.state === SESSION_STATE.PLAYER_READY &&
+
             <div className="row">
               {cards.map(card => 
                 <div className="col m-0 p-0" key={`slot_${card.name}`}>
@@ -301,8 +289,10 @@ export const Session = (props) => {
                 </div> 
               )} 
             </div>
-          </div>
-        }
+
+          }
+        </div>
+        
     </>
 
   )
