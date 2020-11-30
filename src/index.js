@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.scss';
+
+
+
 import 'sweetalert2/dist/sweetalert2.min.css'
+import './index.css';
+
 
 ReactDOM.render(
   <React.StrictMode>

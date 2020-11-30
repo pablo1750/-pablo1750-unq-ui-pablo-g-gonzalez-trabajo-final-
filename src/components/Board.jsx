@@ -177,7 +177,7 @@ export const Board = (props) => {
           {data.state == SESSION_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
         </div>   
       </div>
-      <div className="row">
+      <div className="row d-flex justify-content-center">
         {data.players.map((player, index) => 
           <div className="col-6 col-md-4 col-lg-2 mb-3">
             <Player key={`playerBoard-${player.index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} />
