@@ -54,36 +54,37 @@ export const Player = (props) => {
         <div className="card-text text-center mb-3">
           <Choice card={props.data.cardSelected} show={props.show} />
         </div>
-        {props.data.type === USER_TYPE.HUMAN && props.turn &&
-          <button className="btn btn-success" onClick={onChoiceClick} disabled={!props.turn}>
-            Choice {props.readyCountDown > 0 && <span>({props.readyCountDown})</span>}
-          </button>
-        }
-        {props.data.type === USER_TYPE.CPU && props.turn &&
-          <button className="btn btn-success" onClick={props.onReady} disabled>
-            <div className="spinner-border  spinner-border-sm text-primary" role="status">
-              <span className="sr-only">Loading...</span>
-            </div> Choosing
-          </button>
-        }
-        {!props.turn && false &&
-          <button className="btn btn-success" onClick={props.onReady} disabled>
-            Waiting
-          </button>
-        }
-        {props.data.status == PLAYER_STATUS.PLAYING && false &&
-          <div className="alert alert-info">Playing</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
-          <div className="alert alert-success m-1 p-1">Winner ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_LOST &&
-          <div className="alert alert-danger m-1 p-1">Loser ({props.data.score})</div>
-        }
-        {props.data.status == PLAYER_STATUS.ROUND_TIED &&
-          <div className="alert alert-success m-1 p-1">Tied ({props.data.score})</div>
-        }
-
+        <div style={{minHeight: "40px"}}>
+          {props.data.type === USER_TYPE.HUMAN && props.turn &&
+            <button className="btn btn-success" onClick={onChoiceClick} disabled={!props.turn}>
+              Choice {props.readyCountDown > 0 && <span>({props.readyCountDown})</span>}
+            </button>
+          }
+          {props.data.type === USER_TYPE.CPU && props.turn &&
+            <button className="btn btn-success" onClick={props.onReady} disabled>
+              <div className="spinner-border  spinner-border-sm text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div> Choosing
+            </button>
+          }
+          {!props.turn && false &&
+            <button className="btn btn-success" onClick={props.onReady} disabled>
+              Waiting
+            </button>
+          }
+          {props.data.status == PLAYER_STATUS.PLAYING && false &&
+            <div className="alert alert-info">Playing</div>
+          }
+          {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
+            <div className="alert alert-success m-1 p-1">Winner ({props.data.score})</div>
+          }
+          {props.data.status == PLAYER_STATUS.ROUND_LOST &&
+            <div className="alert alert-danger m-1 p-1">Loser ({props.data.score})</div>
+          }
+          {props.data.status == PLAYER_STATUS.ROUND_TIED &&
+            <div className="alert alert-success m-1 p-1">Tied ({props.data.score})</div>
+          }
+        </div>
       </div>
     </div>
   )
