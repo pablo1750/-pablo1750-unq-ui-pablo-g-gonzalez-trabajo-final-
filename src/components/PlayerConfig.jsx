@@ -12,7 +12,7 @@ export const PlayerConfig = (props) => {
       setError(true);
       return;
     }
-    props.onConfirmPlayer(props.slotIndex, {...data, ok: true});
+    props.onConfirmPlayer({...data, ok: true});
   }
   
   const handleNameChange = (event) => {
@@ -41,7 +41,7 @@ export const PlayerConfig = (props) => {
               {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
               {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
               <button type="submit" className="btn btn-outline-success">Confirm</button>
-              {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer(props.data)}>Cancel</button>}
+              {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer()}>Cancel</button>}
             </div>
           </div>
             <div class="invalid-feedback">

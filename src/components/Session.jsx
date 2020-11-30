@@ -16,15 +16,15 @@ export const SESSION_STATE = {
 
 export const emptySession = {
     playersSlots: [
-      playerEmpty(true),
-      playerEmpty(true),
+      {...playerEmpty(true), index: 1},
+      {...playerEmpty(true), index: 2},
     ],
     players: [],
     start: false,
     current: null,
     state: SESSION_STATE.CONFIG,
     roundHasWinner: false,
-    playersCounter: 0
+    playersCounter: 2
   }
 
 export const Session = (props) => {
@@ -87,26 +87,25 @@ export const Session = (props) => {
   };
   */
 
-  const handleConfirmPlayer = (slotIndex, player) =>{
+  const handleConfirmPlayer = (playerSlot, player) =>{
     setData({
       ...data, 
       players: [
-        ...data.players, 
-        {...player, index: data.playersCounter}
+        ...data.players, player
       ],
       playersCounter: data.playersCounter + 1,
-      playersSlots: data.playersSlots.filter((item, index) => index !== slotIndex)
+      playersSlots: data.playersSlots.filter(slot => playerSlot !== slot)
     });
   };
 
   const handleAddPlayerSlot = () => {
-    setData({...data, playersSlots: [...data.playersSlots, playerEmpty(false)] });
+    setData({...data, playersSlots: [{ ...playerEmpty(false), index: data.playersCounter + 1 } ] });
   }
 
   const handleCardSelect = (card) => {
     setData({
       ...data, 
-      playersSlots: data.playersSlots.map((item, j) => {
+      players: data.players.map((item, j) => {
         return (j === data.current) ? {...item, cardSelected: card} : item;
       }),
       current: nextTurn(),
@@ -129,7 +128,7 @@ export const Session = (props) => {
 
 
     const cardsSelected = data.players
-      .filter(player => player.status == PLAYER_STATUS.PLAYING)
+      .filter(player => player.status === PLAYER_STATUS.PLAYING)
       .map(player => player.cardSelected);
 
       //este filtro es para eliminar duplicados
@@ -155,7 +154,7 @@ export const Session = (props) => {
           return player;
         }else{
           const score = scores.find(s => s.name === player.cardSelected.name).value
-          //console.log({cardsSelected: cardsSelected, scores: scores, maxScore: maxScore, hasWinner: hasWinner, winnersStatus: winnersStatus, player: player, score: score});
+          console.log({cardsSelected: cardsSelected, scores: scores, maxScore: maxScore, hasWinner: hasWinner, winnersStatus: winnersStatus, player: player, score: score});
           return {
             ...player, 
             score: score,
@@ -197,7 +196,7 @@ export const Session = (props) => {
       roundHasWinner: false,
       state: SESSION_STATE.START,
       current: 0,
-      playersSlots: data.playersSlots.map(player => {
+      players: data.players.map(player => {
         return {
           ...player, 
           //deselecciono la carta
@@ -215,9 +214,7 @@ export const Session = (props) => {
 
   const handlePlayerReady = () => {
     //el usuario dice que esta listo, pero si es cpu tengo que elegir yo la carta::
-    //if(data.playersSlots[data.current].type === USER_TYPE.HUMAN){
-      setData({...data, state: SESSION_STATE.PLAYER_READY});
-    //}
+    setData({...data, state: SESSION_STATE.PLAYER_READY});
   }
 
   //funcion extraida de developer.mozilla.org
@@ -264,9 +261,9 @@ export const Session = (props) => {
                       </li>
                     )}
 
-                    {data.playersSlots.map((playerSlot, index) => 
-                      <li className="list-group-item" key={`playerSlot-${index}`}>
-                        <PlayerConfig data={playerSlot} slotIndex={index} onConfirmPlayer={handleConfirmPlayer} onCancelPlayer={handleRemovePlayerSlot}/>
+                    {data.playersSlots.map(playerSlot => 
+                      <li className="list-group-item" key={playerSlot.index}>
+                        <PlayerConfig data={playerSlot} onConfirmPlayer={(player) => {handleConfirmPlayer(playerSlot, player)}} onCancelPlayer={() => handleRemovePlayerSlot(playerSlot)}/>
                       </li>
                     )}
 
@@ -295,9 +292,9 @@ export const Session = (props) => {
                 </div>   
               </div>
               <div className="row">
-                {data.players.map((player, index) => player.ok && player.status != PLAYER_STATUS.ROUND_LOST &&
+                {data.players.map((player, index) => player.status != PLAYER_STATUS.ROUND_LOST &&
                   <div className="col-6 col-md-4 col-lg-2 mb-3">
-                    <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} readyCountDown={data.playerReadyCountDown} show={data.state >= SESSION_STATE.SHOW_CARDS} />
+                    <Player key={`playerSession-${index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} />
                   </div>
                 )}  
               </div>
@@ -312,7 +309,7 @@ export const Session = (props) => {
             <div className="row">
               {cards.map(card => 
                 <div className="col m-0 p-0" key={`slot_${card.name}`}>
-                  <Slot card={card} onSelect={() => handleCardSelect(card)} player={data.playersSlots[data.current]}/>
+                  <Slot card={card} onSelect={() => handleCardSelect(card)} player={data.players[data.current]}/>
                 </div> 
               )} 
             </div>
