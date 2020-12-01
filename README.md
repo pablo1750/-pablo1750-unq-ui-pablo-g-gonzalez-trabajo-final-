@@ -7,7 +7,7 @@ Demo
 
 Requerimientos
 ------------
-<a href="https://git-scm.com/downloads">GIT</a>
+<a href="https://git-scm.com/downloads">GIT</a> <br/>
 <a href="https://nodejs.org/es/">Node.js</a>
 
 Instalación
