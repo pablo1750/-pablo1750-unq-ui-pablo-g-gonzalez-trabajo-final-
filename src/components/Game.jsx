@@ -10,7 +10,9 @@ export const Game = (props) => {
       <Nav />
       <Router>
         <Switch>
-          <Route path="/unq-ui-pablo-g-gonzalez-trabajo-final/game" component={Session}/>
+          <Route path="/unq-ui-pablo-g-gonzalez-trabajo-final/game" >
+            <Session/>
+          </Route>
           <Route path="/unq-ui-pablo-g-gonzalez-trabajo-final/" component={Intro}/>
           <Route path="/game">
             <Redirect to={"/unq-ui-pablo-g-gonzalez-trabajo-final/game"} />

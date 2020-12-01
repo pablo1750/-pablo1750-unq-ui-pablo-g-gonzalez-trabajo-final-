@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import PlayersContext, { nextRoundPlayersUpdate, roundResultPlayersUpdate, selectCard } from '../providers/PlayersContext';
 import { cardBeatTo, cards, coveredCard } from './Cards';
 import { Player, PLAYER_STATUS, USER_TYPE } from './Player';
 import { SESSION_STATE } from './Session';
@@ -7,7 +8,6 @@ import { Slot } from './Slot';
 
 
 export const emptyBoard = () => { return {
-  players: [],
   current: 0,
   state: SESSION_STATE.START,
   roundHasWinner: false,
@@ -16,14 +16,14 @@ export const emptyBoard = () => { return {
 
 export const Board = (props) => {
   
-  const [data, setData] = useState({...emptyBoard(), players: props.players} );
+  const [data, setData] = useState({...emptyBoard()} );
 
-
+  const [players, setPlayers] = useContext(PlayersContext);
 
   useEffect(() => {
 
     //update end of round (si todos los jugadores en estado PLAYING tienen carta seleccionada)
-    if(data.players.length > 0 && data.players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
+    if(players.length > 0 && players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
       setData({
         ...data, 
         state : SESSION_STATE.END_ROUND
@@ -32,14 +32,14 @@ export const Board = (props) => {
     }
 
     //si el usuario actual no esta jugando porque perdio le pongo una carga cubierta
-    if( data.current in data.players && data.players[data.current].status === PLAYER_STATUS.ROUND_LOST) {
+    if( data.current in players && players[data.current].status === PLAYER_STATUS.ROUND_LOST) {
       handleCardSelect(coveredCard);
       return;
     }
 
     //si el usuario actual es la maquina, 
     //dejo un tiempo de espera entre medio segundo y dos segundos para que parezca que la cpu esta pensando antes de decidir
-    if( data.current in data.players && data.players[data.current].type === USER_TYPE.CPU) {
+    if( data.current in players && players[data.current].type === USER_TYPE.CPU) {
       handlePlayerReady();
       setTimeout(() => {
         handleCardSelect(cards[getRandomInt(0,5)]);;
@@ -55,17 +55,11 @@ export const Board = (props) => {
   const handleCardSelect = (card) => {
     setData({
       ...data, 
-      players: data.players.map((item, j) => {
-        return (j === data.current) ? {...item, cardSelected: card} : item;
-      }),
       current: nextTurn(),
       state: SESSION_STATE.START
     });
-
-    console.log(data)
+    selectCard(setPlayers, data.current, card);
   }
-
-
   
   const handleShowCards = () => {
     setData({...data, state: SESSION_STATE.SHOW_CARDS});
@@ -73,9 +67,7 @@ export const Board = (props) => {
   }
 
   const handleShowResults = () => {
-
-
-    const cardsSelected = data.players
+    const cardsSelected = players
       .filter(player => player.status === PLAYER_STATUS.PLAYING)
       .map(player => player.cardSelected);
 
@@ -92,28 +84,14 @@ export const Board = (props) => {
     const maxScore = Math.max.apply(null, scores.map(score => {return score.value} ));
     const hasWinner = scores.filter(s => s.value == maxScore).length == 1 &&  scores.filter(s => s.value == maxScore)[0].count == 1 ;
     const winnersStatus = hasWinner ? PLAYER_STATUS.ROUND_WINNER : PLAYER_STATUS.ROUND_TIED;
-
     setData({
       ...data, 
       state: SESSION_STATE.SHOW_RESULTS,
       roundHasWinner: hasWinner,
-      players: data.players.map((player) => {
-        if(player.status !== PLAYER_STATUS.PLAYING){
-          return player;
-        }else{
-          const score = scores.find(s => s.name === player.cardSelected.name).value
-          console.log({cardsSelected: cardsSelected, scores: scores, maxScore: maxScore, hasWinner: hasWinner, winnersStatus: winnersStatus, player: player, score: score});
-          return {
-            ...player, 
-            score: score,
-            status: score == maxScore ? winnersStatus : PLAYER_STATUS.ROUND_LOST,
-            victories: score == maxScore && hasWinner ? player.victories + 1 : player.victories,
-          };
-        }
-      })
-
     });
-  
+
+    roundResultPlayersUpdate(setPlayers, scores, maxScore, hasWinner, winnersStatus);
+
   }
 
  
@@ -123,20 +101,8 @@ export const Board = (props) => {
       roundHasWinner: false,
       state: SESSION_STATE.START,
       current: 0,
-      players: data.players.map(player => {
-        return {
-          ...player, 
-          //deselecciono la carta
-          cardSelected: !data.roundHasWinner && player.status === PLAYER_STATUS.ROUND_LOST ? coveredCard : undefined, 
-          //reinicio el score
-          score: 0, 
-          //si no hubo ganador y est jugador perdio, no juega la siguiente ronda
-          status: !data.roundHasWinner && player.status === PLAYER_STATUS.ROUND_LOST ? player.status : PLAYER_STATUS.PLAYING,
-        }
-      }
-
-      ) 
     });
+    nextRoundPlayersUpdate(setPlayers, data.roundHasWinner);
   }
 
   const handlePlayerReady = () => {
@@ -179,7 +145,7 @@ export const Board = (props) => {
         </div>   
       </div>
       <div className="row d-flex justify-content-center">
-        {data.players.map((player, index) => 
+        {players.map((player, index) => 
           <div className="col-6 col-md-4 col-lg-2 mb-3">
             <Player key={`playerBoard-${player.index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} />
           </div>
@@ -192,7 +158,7 @@ export const Board = (props) => {
           <div className="row">
             {cards.map(card => 
               <div className="col m-0 p-0" key={`slot_${card.name}`}>
-                <Slot card={card} onSelect={() => handleCardSelect(card)} player={data.players[data.current]}/>
+                <Slot card={card} onSelect={() => handleCardSelect(card)} player={players[data.current]}/>
               </div> 
             )} 
           </div>
