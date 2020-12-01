@@ -13,7 +13,6 @@ export const SESSION_STATE = {
 export const Session = (props) => {
 
   const [data, setData] = useState({
-    start: false,
     state: SESSION_STATE.CONFIG,
     playersOk: true,
   });
@@ -28,7 +27,7 @@ export const Session = (props) => {
     exitPlayers(setPlayers);
   }  
 
-  const handleRestart = () => {
+  const handleRestartClick = () => {
     Swal.fire({
       icon: 'question',
       html: `Are you sure to restart?`,
@@ -46,7 +45,7 @@ export const Session = (props) => {
     })
   }
 
-  const handleStart = () => {
+  const handleStartClick = () => {
     setData({...data, state: SESSION_STATE.START});
   }
   
@@ -62,8 +61,8 @@ export const Session = (props) => {
             <>
               <div className="row" style={{minHeight: "55px"}}>
                 <div className="col col-12 mh-100">
-                  {players.length > 1 && <button className="btn btn-danger m-1" onClick={handleRestart}>Restart</button>}
-                  {players.length > 1 && data.playersOk && <button className="btn btn-success m-1" onClick={handleStart}>Play</button>}
+                  {players.length > 1 && <button className="btn btn-danger m-1" onClick={handleRestartClick}>Restart</button>}
+                  {players.length > 1 && data.playersOk && <button className="btn btn-success m-1" onClick={handleStartClick}>Play</button>}
                 </div>   
               </div>
               <Players onPlayersOkChange={handlePlayersOkChange}/>

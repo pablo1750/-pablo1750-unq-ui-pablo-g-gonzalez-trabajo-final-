@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, coveredCard } from './Cards';
 import { USER_TYPE } from './Player';
 
 export const Slot = (props) => {
-  //const [covered, setCovered] = useState(true);
+
   const handleSelectClick = () => {
     props.onSelect(props.card);
   }

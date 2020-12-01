@@ -77,7 +77,6 @@ export const Players = (props) => {
                     </svg>
                   </a>
                 </span>
-                
               </li>
             )}
 
