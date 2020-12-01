@@ -6,18 +6,24 @@ import { Player, PLAYER_STATUS, USER_TYPE } from './Player';
 import { SESSION_STATE } from './Session';
 import { Slot } from './Slot';
 
+const ROUND_STATE = {
+  START: 0,
+  PLAYER_READY: 1,
+  END_ROUND: 2,
+  SHOW_CARDS: 3,
+  SHOW_RESULTS: 4
+}
+
 
 export const emptyBoard = () => { return {
   current: 0,
-  state: SESSION_STATE.START,
+  state: ROUND_STATE.START,
   roundHasWinner: false,
 }}
-
 
 export const Board = (props) => {
   
   const [data, setData] = useState({...emptyBoard()} );
-
   const [players, setPlayers] = useContext(PlayersContext);
 
   useEffect(() => {
@@ -26,7 +32,7 @@ export const Board = (props) => {
     if(players.length > 0 && players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
       setData({
         ...data, 
-        state : SESSION_STATE.END_ROUND
+        state : ROUND_STATE.END_ROUND
       });
       autoShowCards();
     }
@@ -53,16 +59,17 @@ export const Board = (props) => {
 
   
   const handleCardSelect = (card) => {
+    selectCard(setPlayers, data.current, card);
     setData({
       ...data, 
       current: nextTurn(),
-      state: SESSION_STATE.START
+      state: ROUND_STATE.START
     });
-    selectCard(setPlayers, data.current, card);
+    
   }
   
   const handleShowCards = () => {
-    setData({...data, state: SESSION_STATE.SHOW_CARDS});
+    setData({...data, state: ROUND_STATE.SHOW_CARDS});
     setTimeout(()=>{handleShowResults()}, 1000)
   }
 
@@ -86,7 +93,7 @@ export const Board = (props) => {
     const winnersStatus = hasWinner ? PLAYER_STATUS.ROUND_WINNER : PLAYER_STATUS.ROUND_TIED;
     setData({
       ...data, 
-      state: SESSION_STATE.SHOW_RESULTS,
+      state: ROUND_STATE.SHOW_RESULTS,
       roundHasWinner: hasWinner,
     });
 
@@ -99,7 +106,7 @@ export const Board = (props) => {
     setData({
       ...data, 
       roundHasWinner: false,
-      state: SESSION_STATE.START,
+      state: ROUND_STATE.START,
       current: 0,
     });
     nextRoundPlayersUpdate(setPlayers, data.roundHasWinner);
@@ -107,7 +114,7 @@ export const Board = (props) => {
 
   const handlePlayerReady = () => {
     //el usuario dice que esta listo, pero si es cpu tengo que elegir yo la carta::
-    setData({...data, state: SESSION_STATE.PLAYER_READY});
+    setData({...data, state: ROUND_STATE.PLAYER_READY});
   }
 
   //funcion extraida de developer.mozilla.org
@@ -134,38 +141,32 @@ export const Board = (props) => {
 
   return (
     <>
-
-
       <div className="row" style={{minHeight: "55px"}}>
         <div className="col col-12 mh-100">
           <button className="btn btn-danger m-1" onClick={() => {props.onExitBoard(data.players)}}>Exit</button>
-          {data.state == SESSION_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
-          {data.state == SESSION_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
-          {data.state == SESSION_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
+          {data.state == ROUND_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
+          {data.state == ROUND_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
+          {data.state == ROUND_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
         </div>   
       </div>
       <div className="row d-flex justify-content-center">
         {players.map((player, index) => 
-          <div className="col-6 col-md-4 col-lg-2 mb-3">
-            <Player key={`playerBoard-${player.index}`} data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= SESSION_STATE.SHOW_CARDS} />
+          <div key={`player-${player.index}`} className="col-6 col-md-4 col-lg-2 mb-3">
+            <Player data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= ROUND_STATE.SHOW_CARDS} />
           </div>
         )}  
       </div>
-
-      <div className={`container fixed-bottom overflow-auto ${data.state === SESSION_STATE.PLAYER_READY && "w3-animate-bottom"}`}>
-        {data.state === SESSION_STATE.PLAYER_READY &&
-
+      <div className={`container fixed-bottom overflow-auto ${data.state === ROUND_STATE.PLAYER_READY && "w3-animate-bottom"}`}>
+        {data.state === ROUND_STATE.PLAYER_READY &&
           <div className="row">
             {cards.map(card => 
-              <div className="col m-0 p-0" key={`slot_${card.name}`}>
+              <div className="col m-0 p-0" key={`card_slot-${card.name}`}>
                 <Slot card={card} onSelect={() => handleCardSelect(card)} player={players[data.current]}/>
               </div> 
             )} 
           </div>
-
         }
       </div>
-
     </>
   )
 }

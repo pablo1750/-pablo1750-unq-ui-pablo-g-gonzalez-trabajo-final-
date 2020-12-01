@@ -1,18 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import PlayersContext, {clearPlayers, exitPlayers} from '../providers/PlayersContext';
 import { Board } from './Board';
-import { PLAYER_STATUS } from './Player';
 import { Players } from './Players';
 
 
 export const SESSION_STATE = {
   CONFIG: 0,
   START: 1,
-  PLAYER_READY: 2,
-  END_ROUND: 3,
-  SHOW_CARDS: 4,
-  SHOW_RESULTS: 5
 }
 
 export const Session = (props) => {
