@@ -10,19 +10,11 @@ export const Game = (props) => {
       <Nav />
       <Router>
         <Switch>
-          <Route path="/unq-ui-pablo-g-gonzalez-trabajo-final/game" >
-            <Session/>
-          </Route>
-          <Route path="/unq-ui-pablo-g-gonzalez-trabajo-final/" component={Intro}/>
-          <Route path="/game">
-            <Redirect to={"/unq-ui-pablo-g-gonzalez-trabajo-final/game"} />
-          </Route>
-          <Route path="*">
-            <Redirect to={"/unq-ui-pablo-g-gonzalez-trabajo-final/"} />
-          </Route>
+          <Route path="/game" component={Session}/>
+          <Route path="*" component={Intro}/>
+
         </Switch>
       </Router>
-      
     </>
   )
 }

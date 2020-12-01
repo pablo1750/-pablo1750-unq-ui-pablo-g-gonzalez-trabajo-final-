@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 
 export const coveredCard =   {
@@ -64,16 +62,6 @@ export const cards = [
 ];
 
 export const cardBeatTo = (card1, card2) => card1.beat.some(b => b.card == card2.name);
-
-export const whoWins = (card1, card2) => {
-  if(card1.beat.any(card => card.name == card2.name)){
-    return card1;
-  }
-  if(card2.beat.any(card => card.name == card1.name)){
-    return card2;
-  }
-  return null;
-}
 
 export const Card = (props) => {
   return (

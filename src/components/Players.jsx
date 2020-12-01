@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import PlayersContext, { addPlayer, removePlayer } from '../providers/PlayersContext';
+import PlayersContext, { addPlayer, nextPlayerIndex, removePlayer } from '../providers/PlayersContext';
 import { playerEmpty } from './Player';
 import { PlayerConfig } from './PlayerConfig';
 import { VictoriesCounter } from './VictoriesCounter';
@@ -10,23 +10,17 @@ export const Players = (props) => {
   
   const [players, setPlayers] = useContext(PlayersContext);
     
-  const [data, setData] = useState({
-    playersSlots: [],
-    nextIndex: (Math.max.apply(null, players.map(player => {return player.index} )) | 0) + 1,
-  });
+  const [playersSlots, setPlayersSlots] = useState([]);
 
   useEffect(() => {
-    props.onPlayersOkChange( data.playersSlots.length == 0);
-  }, [data.playersSlots])
+    props.onPlayersOkChange( playersSlots.length == 0);
+  }, [playersSlots])
 
   const initSlots = () => {
-    
-    for(var i = 0; i > data.players.length - 2; i++ ){
+    for(var i = 0; i > players.length - 2; i++ ){
       handleAddPlayerSlot();
     }
-    
   };
-
 
   const handleRemovePlayer = (player) => {
     Swal.fire({
@@ -46,36 +40,18 @@ export const Players = (props) => {
     })
   }
 
-  const isOk = () => data.playersSlots.length === 0;
-
-  const handleRemovePlayerSlot = (slot) => {
-    setData({
-      ...data, 
-      playersSlots: data.playersSlots.filter(item => item !== slot),
-    });
-    
+   const handleRemovePlayerSlot = (slot) => {
+    setPlayersSlots(playersSlots.filter(item => item !== slot));
   }
 
   const handleConfirmPlayer = (playerSlot, player) =>{
-    setData({
-      ...data, 
-      playersSlots: data.playersSlots.filter(slot => playerSlot !== slot),
-    });
+    handleRemovePlayerSlot(playerSlot);
     addPlayer(setPlayers, player);
   };
 
-
   const handleAddPlayerSlot = () => {
-    setData((data) => {
-      return {
-        ...data, 
-        playersSlots: addPlayerSlot(data.playersSlots, data.nextIndex), 
-        nextIndex: data.nextIndex + 1, 
-      }
-    });
+    setPlayersSlots(playersSlots => [...playersSlots, { ...playerEmpty(false), index: nextPlayerIndex(players) }] );
   }
-
-  const addPlayerSlot = (playersSlots, index) => [...playersSlots, { ...playerEmpty(false), index: index } ];
 
   return (
     <>
@@ -105,13 +81,13 @@ export const Players = (props) => {
               </li>
             )}
 
-            {data.playersSlots.map(playerSlot => 
+            {playersSlots.map(playerSlot => 
               <li className="list-group-item" key={playerSlot.index}>
                 <PlayerConfig data={playerSlot} onConfirmPlayer={(player) => {handleConfirmPlayer(playerSlot, player)}} onCancelPlayer={() => handleRemovePlayerSlot(playerSlot)}/>
               </li>
             )}
 
-            {data.playersSlots.length == 0 && 
+            {playersSlots.length == 0 && 
               <li className="list-group-item">
                 <button className="btn btn-primary" onClick={handleAddPlayerSlot}>Add Player</button>
               </li>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PLAYER_STATUS, USER_TYPE } from './Player';
+import { USER_TYPE } from './Player';
 
 export const PlayerConfig = (props) => {
 
@@ -33,33 +33,31 @@ export const PlayerConfig = (props) => {
 
   return (
     <>
-      {
-        <form className={`${error && "was-validated"} h-100`} onSubmit={handleSubmit} noValidate>
+      <form className={`${error && "was-validated"} h-100`} onSubmit={handleSubmit} noValidate>
+        <div className="input-group input-group-sm">
 
-          <div className="input-group input-group-sm">
-            <div className="input-group-prepend">
-              <span className="input-group-text">Player {data.index}</span>
-            </div>
-            <input className="form-control" placeholder="Name" value={data.name} autoFocus={data.index!=2} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
-            
-            <div className="input-group-append">
-              {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
-              {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
-              <button type="submit" className="btn btn-outline-success">Confirm</button>
-              {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer()}>Cancel</button>}
-            </div>
+          <div className="input-group-prepend">
+            <span className="input-group-text">Player {data.index}</span>
           </div>
-          {error &&  
+          
+          <input className="form-control" placeholder="Name" value={data.name} autoFocus={data.index!=2} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
+          
+          <div className="input-group-append">
+            {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
+            {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
+            <button type="submit" className="btn btn-outline-success">Confirm</button>
+            {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer()}>Cancel</button>}
+          </div>
+          
+        </div>
+        {error &&  
           <div className="input-group input-group-sm"> 
-              <div className="alert alert-danger p-1 w-100">
-                {error}
-              </div>
+            <div className="alert alert-danger p-1 w-100">
+              {error}
+            </div>
           </div>
-          }
-         
-        </form>
-
-      }
+        }
+      </form>
     </>
   )
 

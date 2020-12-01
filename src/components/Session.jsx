@@ -40,8 +40,9 @@ export const Session = (props) => {
       timer: 4000,
       timerProgressBar: true,
     }).then((result) => {
-      result.isConfirmed && setData({...data, ok: false});
-      clearPlayers(setPlayers);
+      if(result.isConfirmed){
+        clearPlayers(setPlayers);  
+      } 
     })
   }
 

@@ -52,9 +52,11 @@ const nextRoundPlayersUpdate = (setter, roundHasWinner) => setter(players =>
     }
   })
 )
+
+const nextPlayerIndex = (players) => (Math.max.apply(null, players.map(player => {return player.index} )) | 0) + 1;
 // (B)
 const PlayersContext = React.createContext(null); 
 
 // (C)
-export { addPlayer, removePlayer, clearPlayers, exitPlayers, selectCard, roundResultPlayersUpdate, nextRoundPlayersUpdate};
+export { addPlayer, removePlayer, clearPlayers, exitPlayers, selectCard, roundResultPlayersUpdate, nextRoundPlayersUpdate, nextPlayerIndex};
 export default PlayersContext;

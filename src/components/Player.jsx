@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Choice } from './Choice';
 import { VictoriesCounter } from './VictoriesCounter';
 
@@ -32,10 +32,8 @@ export const playerEmpty = (readonly) => {
 }
 
 export const Player = (props) => {
-  const [choising, setChoising] = useState(false);
 
   const onChoiceClick = () => {
-    setChoising(true);
     props.onReady();
   }
 
@@ -56,16 +54,16 @@ export const Player = (props) => {
         <VictoriesCounter victories={props.data.victories}/>
       </div>
 
-      <div className="card-body p-2">
-        
-        <div className="card-title">
-        {props.data.name.substring(0,6)}{props.data.name.length>6 && "…"}
+      <div className="card-body p-2">    
 
+        <div className="card-title">
+          {props.data.name.substring(0,6)}{props.data.name.length>6 && "…"}
         </div>
 
         <div className="card-text text-center mb-3">
           <Choice card={props.data.cardSelected} show={props.show} />
         </div>
+
         <div style={{minHeight: "40px"}}>
           {props.data.type === USER_TYPE.HUMAN && props.turn &&
             <button className="btn btn-success" onClick={onChoiceClick} disabled={!props.turn}>
@@ -77,11 +75,6 @@ export const Player = (props) => {
               <div className="spinner-border  spinner-border-sm text-primary" role="status">
                 <span className="sr-only">Loading...</span>
               </div> Choosing
-            </button>
-          }
-          {!props.turn && false &&
-            <button className="btn btn-success" onClick={props.onReady} disabled>
-              Waiting
             </button>
           }
           {props.data.status == PLAYER_STATUS.PLAYING && false &&
