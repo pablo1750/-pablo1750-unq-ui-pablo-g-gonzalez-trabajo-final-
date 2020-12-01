@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100%;
 }
 
 .card-name{
@@ -38,4 +39,97 @@
 
 .card.player.bg-primary{ 
   box-shadow: 0 0 5px rgb(95, 115, 231); 
+}
+
+
+
+.intro-spinner {
+  width: 400px;
+  height: 400px;
+  min-width: 400px;
+  min-height: 400px;
+  animation: 30s kfspin infinite linear;
+  scale: 0.8;
+  position: relative;
+  top: 50px;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+.intro-spinner .arrows {
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  scale: 1;
+}
+
+.intro-spinner.start {
+  position: absolute;
+  display: block;
+  width:80px;
+  height: 80px;
+  min-width: 60px;
+  min-height: 60px;
+  top: 160px;
+  left: 160px;
+  scale: 1.5;
+  border-radius: 50%;
+  padding-top: 15px;
+  animation: 30s kfspinrev infinite linear;
+  border: 7px solid #dcc005;
+  padding-left: 13px;
+}
+
+.intro-spinner-hand {
+  position: absolute;
+  display: block;
+  animation: 30s kfspinrev infinite linear;
+  width: 40%;
+  height: 40%;
+}
+
+.intro-spinner-hand.scissors {
+  top: -51px;
+  left: 120px;
+}
+
+.intro-spinner-hand.paper {
+  top: 72px;
+  left: 282px;
+}
+
+.intro-spinner-hand.spock {
+  top: 56px;
+  left: -36px;
+}
+
+.intro-spinner-hand.lizard {
+  top: 250px;
+  left: 4px;
+}
+
+.intro-spinner-hand.rock {
+  top: 268px;
+  left: 201px;
+}
+
+.intro-spinner-hand img {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes kfspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes kfspinrev {
+  to {
+    transform: rotate(-360deg);
+  }
 }

@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { Board } from './Board';
 import { playerEmpty, PLAYER_STATUS } from './Player';
 import { PlayerConfig } from './PlayerConfig';
+import { VictoriesCounter } from './VictoriesCounter';
 
 
 export const SESSION_STATE = {
@@ -137,7 +138,7 @@ export const Session = (props) => {
                       <li className="list-group-item d-flex justify-content-between align-items-center" key={`playerOk-${player.index}`}>
                         {player.name}
                         <span>
-                          <span className="badge badge-secondary badge-pill">{player.victories}</span>
+                          <VictoriesCounter victories={player.victories}/>
                           <a className="btn btn-outline-primary btn-sm ml-2" onClick={() => {handleRemovePlayer(player)}}>
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                               <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>

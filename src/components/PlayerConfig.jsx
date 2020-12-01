@@ -4,26 +4,29 @@ import { PLAYER_STATUS, USER_TYPE } from './Player';
 export const PlayerConfig = (props) => {
 
   const [data, setData ] = useState(props.data)
-  const [error, setError ] = useState(false)
+  const [error, setError ] = useState("")
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(data.name == ""){
-      setError(true);
+    if(data.name === ""){
+      setError("Name is required.");
       return;
     }
     props.onConfirmPlayer({...data, ok: true});
   }
   
   const handleNameChange = (event) => {
+    setError("");
     setData({...data, name: event.target.value});
   }
 
   const handleCpuClick = (event) => {
+    setError("");
     setData({...data, name: "CPU", type: USER_TYPE.CPU});
   }
   
   const handleHumanClick = (event) => {
+    setError("");
     setData({...data, name: "", type: USER_TYPE.HUMAN});
   }
   
@@ -31,7 +34,7 @@ export const PlayerConfig = (props) => {
   return (
     <>
       {
-        <form className={`${error && "was-validated"}`} onSubmit={handleSubmit} noValidate>
+        <form className={`${error && "was-validated"} h-100`} onSubmit={handleSubmit} noValidate>
 
           <div className="input-group input-group-sm">
             <div className="input-group-prepend">
@@ -46,9 +49,14 @@ export const PlayerConfig = (props) => {
               {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer()}>Cancel</button>}
             </div>
           </div>
-            <div className="invalid-feedback">
-              Please choose a name.
-            </div>
+          {error &&  
+          <div className="input-group input-group-sm"> 
+              <div className="alert alert-danger p-1 w-100">
+                {error}
+              </div>
+          </div>
+          }
+         
         </form>
 
       }

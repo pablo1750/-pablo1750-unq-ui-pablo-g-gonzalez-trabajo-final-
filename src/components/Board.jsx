@@ -37,12 +37,13 @@ export const Board = (props) => {
       return;
     }
 
-    //si el usuario actual es la maquina, dejo un tiempo de espera para que parezca que la cpu esta pensando antes de decidir
+    //si el usuario actual es la maquina, 
+    //dejo un tiempo de espera entre medio segundo y dos segundos para que parezca que la cpu esta pensando antes de decidir
     if( data.current in data.players && data.players[data.current].type === USER_TYPE.CPU) {
       handlePlayerReady();
       setTimeout(() => {
         handleCardSelect(cards[getRandomInt(0,5)]);;
-      }, 500);
+      }, getRandomInt(500,2000));
     }
   }, [data.current] );
 
@@ -126,7 +127,7 @@ export const Board = (props) => {
         return {
           ...player, 
           //deselecciono la carta
-          cardSelected: undefined, 
+          cardSelected: !data.roundHasWinner && player.status === PLAYER_STATUS.ROUND_LOST ? coveredCard : undefined, 
           //reinicio el score
           score: 0, 
           //si no hubo ganador y est jugador perdio, no juega la siguiente ronda
