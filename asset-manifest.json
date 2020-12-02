@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/css/main.be5f6fad.chunk.css",
-    "main.js": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/main.38e911a9.chunk.js",
-    "main.js.map": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/main.38e911a9.chunk.js.map",
+    "main.js": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/main.a217a1c3.chunk.js",
+    "main.js.map": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/main.a217a1c3.chunk.js.map",
     "runtime-main.js": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/runtime-main.d968198a.js",
     "runtime-main.js.map": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/js/runtime-main.d968198a.js.map",
     "static/css/2.b4374897.chunk.css": "/unq-ui-pablo-g-gonzalez-trabajo-final/static/css/2.b4374897.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.b4374897.chunk.css",
     "static/js/2.f9bee81b.chunk.js",
     "static/css/main.be5f6fad.chunk.css",
-    "static/js/main.38e911a9.chunk.js"
+    "static/js/main.a217a1c3.chunk.js"
   ]
 }
