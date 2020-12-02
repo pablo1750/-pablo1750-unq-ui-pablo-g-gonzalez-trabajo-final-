@@ -14,7 +14,7 @@ export const Players = (props) => {
 
   useEffect(() => {
     onPlayersOkChange( playersSlots.length === 0);
-  }, [playersSlots, onPlayersOkChange])
+  }, [playersSlots])
 
   // const initSlots = () => {
   //   for(var i = 0; i > players.length - 2; i++ ){
