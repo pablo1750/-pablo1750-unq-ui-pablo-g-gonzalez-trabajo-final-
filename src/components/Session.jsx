@@ -56,7 +56,7 @@ export const Session = (props) => {
   return (
     <>
       <PlayersContext.Provider value={[players, setPlayers]}>
-        <div className={`container overflow-auto ${data.state == SESSION_STATE.CONFIG && "w3-animate-top"}`}>
+        <div className={`container overflow-auto ${data.state === SESSION_STATE.CONFIG && "w3-animate-top"}`}>
           {data.state === SESSION_STATE.CONFIG &&
             <>
               <div className="row" style={{minHeight: "55px"}}>

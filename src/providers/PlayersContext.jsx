@@ -32,8 +32,8 @@ const roundResultPlayersUpdate = (setter, scores, maxScore, hasWinner, winnersSt
       return {
         ...player, 
         score: score,
-        status: score == maxScore ? winnersStatus : PLAYER_STATUS.ROUND_LOST,
-        victories: score == maxScore && hasWinner ? player.victories + 1 : player.victories,
+        status: score === maxScore ? winnersStatus : PLAYER_STATUS.ROUND_LOST,
+        victories: score === maxScore && hasWinner ? player.victories + 1 : player.victories,
       };
     }
   })

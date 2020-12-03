@@ -38,7 +38,7 @@ export const Player = (props) => {
   }
 
   return (
-    <div className={`card player text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status == PLAYER_STATUS.ROUND_WINNER && "blink bg-warning"}`} style={{minWidth: "160px"}}>
+    <div className={`card player text-white ${props.turn ? "bg-primary" : "bg-secondary"} ${props.data.status === PLAYER_STATUS.ROUND_WINNER && "blink bg-warning"}`} style={{minWidth: "160px"}}>
       
       <div className="card-header  d-flex justify-content-between align-items-center p-2" style={{minHeight: "38px"}}>
         {props.data.type === USER_TYPE.HUMAN && 
@@ -77,16 +77,16 @@ export const Player = (props) => {
               </div> Choosing
             </button>
           }
-          {props.data.status == PLAYER_STATUS.PLAYING && false &&
+          {props.data.status === PLAYER_STATUS.PLAYING && false &&
             <div className="alert alert-info">Playing</div>
           }
-          {props.data.status == PLAYER_STATUS.ROUND_WINNER &&
+          {props.data.status === PLAYER_STATUS.ROUND_WINNER &&
             <div className="alert alert-success m-1 p-1">Winner ({props.data.score})</div>
           }
-          {props.data.status == PLAYER_STATUS.ROUND_LOST &&
+          {props.data.status === PLAYER_STATUS.ROUND_LOST &&
             <div className="alert alert-danger m-1 p-1">Loser ({props.data.score})</div>
           }
-          {props.data.status == PLAYER_STATUS.ROUND_TIED &&
+          {props.data.status === PLAYER_STATUS.ROUND_TIED &&
             <div className="alert alert-success m-1 p-1">Tied ({props.data.score})</div>
           }
         </div>

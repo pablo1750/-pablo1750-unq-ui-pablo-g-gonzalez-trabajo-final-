@@ -40,11 +40,11 @@ export const PlayerConfig = (props) => {
             <span className="input-group-text">Player {data.index}</span>
           </div>
           
-          <input className="form-control" placeholder="Name" value={data.name} autoFocus={props.autoFocus} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
+          <input className="form-control" placeholder="Name" value={data.name} autoFocus={props.autoFocus} disabled={data.type === USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
           
           <div className="input-group-append">
-            {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
-            {data.type == USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
+            {data.type === USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
+            {data.type === USER_TYPE.HUMAN && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
             <button type="submit" className="btn btn-outline-success">Confirm</button>
             {!data.readonly && <button className="btn btn-outline-danger" onClick={() => props.onCancelPlayer()}>Cancel</button>}
           </div>

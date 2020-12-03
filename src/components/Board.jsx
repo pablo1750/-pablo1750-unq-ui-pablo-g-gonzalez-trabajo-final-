@@ -25,6 +25,7 @@ export const Board = (props) => {
   const [players, setPlayers] = useContext(PlayersContext);
 
   useEffect(() => {
+    //intente no usar useEffect pero no consegui tomar el current actualizado despues del setData()
 
     //update end of round (si todos los jugadores en estado PLAYING tienen carta seleccionada)
     if(players.length > 0 && players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
@@ -42,12 +43,12 @@ export const Board = (props) => {
     }
 
     //si el usuario actual es la maquina, 
-    //dejo un tiempo de espera entre medio segundo y dos segundos para que parezca que la cpu esta pensando antes de decidir
+    //dejo un tiempo de espera entre medio segundo y 1.5 segundos para que parezca que la cpu esta pensando antes de decidir
     if( data.current in players && players[data.current].type === USER_TYPE.CPU) {
       handlePlayerReady();
       setTimeout(() => {
         handleCardSelect(cards[getRandomInt(0,5)]);;
-      }, getRandomInt(500,2000));
+      }, getRandomInt(500,1500));
     }
   }, [data.current] );
 
@@ -85,7 +86,7 @@ export const Board = (props) => {
       }
     });
     const maxScore = Math.max.apply(null, scores.map(score => {return score.value} ));
-    const hasWinner = scores.filter(s => s.value == maxScore).length == 1 &&  scores.filter(s => s.value == maxScore)[0].count == 1 ;
+    const hasWinner = scores.filter(s => s.value == maxScore).length === 1 &&  scores.filter(s => s.value === maxScore)[0].count === 1 ;
     const winnersStatus = hasWinner ? PLAYER_STATUS.ROUND_WINNER : PLAYER_STATUS.ROUND_TIED;
     setData({
       ...data, 
@@ -109,7 +110,6 @@ export const Board = (props) => {
   }
 
   const handlePlayerReady = () => {
-    //el usuario dice que esta listo, pero si es cpu tengo que elegir yo la carta::
     setData({...data, state: ROUND_STATE.PLAYER_READY});
   }
 
@@ -162,15 +162,15 @@ export const Board = (props) => {
         <div className="col col-12 mh-100">
           <button className="btn btn-danger m-1" onClick={() => {props.onExitBoard(data.players)}}>Exit</button>
           <button className="btn btn-info m-1" onClick={handleRulesClick}>Rules</button>
-          {data.state == ROUND_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
-          {data.state == ROUND_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
-          {data.state == ROUND_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
+          {data.state === ROUND_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
+          {data.state === ROUND_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
+          {data.state === ROUND_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
         </div>   
       </div>
       <div className="row d-flex justify-content-center">
         {players.map((player, index) => 
           <div key={`player-${player.index}`} className="col-6 col-md-4 col-lg-2 mb-3">
-            <Player data={player} onReady={handlePlayerReady} turn={index == data.current} show={data.state >= ROUND_STATE.SHOW_CARDS} />
+            <Player data={player} onReady={handlePlayerReady} turn={index === data.current} show={data.state >= ROUND_STATE.SHOW_CARDS} />
           </div>
         )}  
       </div>
