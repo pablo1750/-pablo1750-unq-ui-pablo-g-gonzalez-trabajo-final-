@@ -44,7 +44,7 @@ const nextRoundPlayersUpdate = (setter, roundHasWinner) => setter(players =>
     return {
       ...player, 
       //deselecciono la carta
-      cardSelected: !roundHasWinner && player.status === PLAYER_STATUS.ROUND_LOST ? coveredCard : undefined, 
+      cardSelected: undefined, 
       //reinicio el score
       score: 0, 
       //si no hubo ganador y est jugador perdio, no juega la siguiente ronda

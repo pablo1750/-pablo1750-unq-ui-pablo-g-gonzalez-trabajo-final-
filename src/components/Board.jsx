@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PlayersContext, { nextRoundPlayersUpdate, roundResultPlayersUpdate, selectCard } from '../providers/PlayersContext';
 import { cardBeatTo, cards, coveredCard } from './Cards';
-import { Player, PLAYER_STATUS, USER_TYPE } from './Player';
+import { Player, PLAYER_STATUS } from './Player';
 import { Slot } from './Slot';
 
 const ROUND_STATE = {
@@ -13,11 +13,16 @@ const ROUND_STATE = {
   SHOW_RESULTS: 4
 }
 
-export const emptyBoard = () => { return {
+const emptyBoard = () => { return {
   current: 0,
   state: ROUND_STATE.START,
   roundHasWinner: false,
 }}
+
+//funcion extraida de developer.mozilla.org
+//https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Math/random
+export const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
 
 export const Board = (props) => {
   
@@ -25,31 +30,16 @@ export const Board = (props) => {
   const [players, setPlayers] = useContext(PlayersContext);
 
   useEffect(() => {
-    //intente no usar useEffect pero no consegui tomar el current actualizado despues del setData()
 
     //update end of round (si todos los jugadores en estado PLAYING tienen carta seleccionada)
-    if(players.length > 0 && players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
+    if(data.state === ROUND_STATE.START && players.filter(player => player.status === PLAYER_STATUS.PLAYING).every(player => !!player.cardSelected)){
       setData({
         ...data, 
-        state : ROUND_STATE.END_ROUND
+        state : ROUND_STATE.END_ROUND,
       });
       autoShowCards();
     }
 
-    //si el usuario actual no esta jugando porque perdio le pongo una carga cubierta
-    if( data.current in players && players[data.current].status === PLAYER_STATUS.ROUND_LOST) {
-      handleCardSelect(coveredCard);
-      return;
-    }
-
-    //si el usuario actual es la maquina, 
-    //dejo un tiempo de espera entre medio segundo y 1.5 segundos para que parezca que la cpu esta pensando antes de decidir
-    if( data.current in players && players[data.current].type === USER_TYPE.CPU) {
-      handlePlayerReady();
-      setTimeout(() => {
-        handleCardSelect(cards[getRandomInt(0,5)]);;
-      }, getRandomInt(500,1500));
-    }
   }, [data.current] );
 
   const nextTurn = () => {
@@ -65,6 +55,14 @@ export const Board = (props) => {
     });
   }
   
+  const handleRandomCardSelect = () => {
+    handleCardSelect(cards[getRandomInt(0, cards.length)])
+  }
+
+  const handleCoveredCardSelect = () => {
+    handleCardSelect(coveredCard);
+  }
+
   const handleShowCards = () => {
     setData({...data, state: ROUND_STATE.SHOW_CARDS});
     setTimeout(()=>{handleShowResults()}, 1000)
@@ -86,12 +84,13 @@ export const Board = (props) => {
       }
     });
     const maxScore = Math.max.apply(null, scores.map(score => {return score.value} ));
-    const hasWinner = scores.filter(s => s.value == maxScore).length === 1 &&  scores.filter(s => s.value === maxScore)[0].count === 1 ;
+    const hasWinner = scores.filter(s => s.value === maxScore).length === 1 &&  scores.filter(s => s.value === maxScore)[0].count === 1 ;
     const winnersStatus = hasWinner ? PLAYER_STATUS.ROUND_WINNER : PLAYER_STATUS.ROUND_TIED;
     setData({
       ...data, 
       state: ROUND_STATE.SHOW_RESULTS,
       roundHasWinner: hasWinner,
+      current: null,
     });
 
     roundResultPlayersUpdate(setPlayers, scores, maxScore, hasWinner, winnersStatus);
@@ -113,9 +112,6 @@ export const Board = (props) => {
     setData({...data, state: ROUND_STATE.PLAYER_READY});
   }
 
-  //funcion extraida de developer.mozilla.org
-  //https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Math/random
-  const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
   const autoShowCards = () => {
     
@@ -170,7 +166,7 @@ export const Board = (props) => {
       <div className="row d-flex justify-content-center">
         {players.map((player, index) => 
           <div key={`player-${player.index}`} className="col-6 col-md-4 col-lg-2 mb-3">
-            <Player data={player} onReady={handlePlayerReady} turn={index === data.current} show={data.state >= ROUND_STATE.SHOW_CARDS} />
+            <Player data={player} onCoveredCardSelect={handleCoveredCardSelect} onRandomCardSelect={handleRandomCardSelect} onReady={handlePlayerReady} turn={index === data.current} show={data.state >= ROUND_STATE.SHOW_CARDS} />
           </div>
         )}  
       </div>
