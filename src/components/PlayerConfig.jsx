@@ -40,7 +40,7 @@ export const PlayerConfig = (props) => {
             <span className="input-group-text">Player {data.index}</span>
           </div>
           
-          <input className="form-control" placeholder="Name" value={data.name} autoFocus={data.index!=2} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
+          <input className="form-control" placeholder="Name" value={data.name} autoFocus={props.autoFocus} disabled={data.type == USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
           
           <div className="input-group-append">
             {data.type == USER_TYPE.CPU && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}

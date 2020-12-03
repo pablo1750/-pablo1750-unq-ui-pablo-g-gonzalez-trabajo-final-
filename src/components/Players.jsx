@@ -10,17 +10,18 @@ export const Players = (props) => {
   
   const {onPlayersOkChange} = props;
   const [players, setPlayers] = useContext(PlayersContext);
-  const [playersSlots, setPlayersSlots] = useState([]);
+  const [playersSlots, setPlayersSlots] = useState(()=>{
+    let slots = [];
+    for(var i = 1; i < 3 - players.length; i++ ){
+      slots.push( {...playerEmpty(false), index: i} );
+    }
+    return slots;
+  
+  });
 
   useEffect(() => {
     onPlayersOkChange( playersSlots.length === 0);
   }, [playersSlots])
-
-  // const initSlots = () => {
-  //   for(var i = 0; i > players.length - 2; i++ ){
-  //     handleAddPlayerSlot();
-  //   }
-  // };
 
   const handleRemovePlayer = (player) => {
     Swal.fire({
@@ -50,7 +51,7 @@ export const Players = (props) => {
   };
 
   const handleAddPlayerSlot = () => {
-    setPlayersSlots(playersSlots => [...playersSlots, { ...playerEmpty(false), index: nextPlayerIndex(players) }] );
+    setPlayersSlots(playersSlots => [...playersSlots, {...playerEmpty(false), index: nextPlayerIndex(players)}] );
   }
 
   return (
@@ -80,9 +81,9 @@ export const Players = (props) => {
               </li>
             )}
 
-            {playersSlots.map(playerSlot => 
+            {playersSlots.map((playerSlot, index)=> 
               <li className="list-group-item" key={playerSlot.index}>
-                <PlayerConfig data={playerSlot} onConfirmPlayer={(player) => {handleConfirmPlayer(playerSlot, player)}} onCancelPlayer={() => handleRemovePlayerSlot(playerSlot)}/>
+                <PlayerConfig data={playerSlot} autoFocus={index===0} onConfirmPlayer={(player) => {handleConfirmPlayer(playerSlot, player)}} onCancelPlayer={() => handleRemovePlayerSlot(playerSlot)}/>
               </li>
             )}
 
