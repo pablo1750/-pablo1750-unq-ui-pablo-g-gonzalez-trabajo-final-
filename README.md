@@ -13,10 +13,21 @@
 
 ------------
 ### Instalación
-Si usas GIT, con la consola navegá hasta la carpeta de destino y ejecutá el comando de GIT para clonar el proyecto. Si no usas GIT descarga el paquete desde el <a href="https://github.com/pablo1750/unq-ui-pablo-g-gonzalez-trabajo-final">repositorio</a>, colocalo en una carpeta local y con la consola navegá hasta esa ubicación.
 
-Ejecuta el comando 'npm install', para instalar las dependencias, eso tarda un poco, cuando termina finalmente usa 'npm start' para correr el proyecto de manera local.
-NOTA: para volver a correr el proyecto solamente necesitas ejecutar 'npm start'.
+##### Descarga:
+
+Si usas GIT, con la consola navegá hasta la carpeta de destino y ejecutá el comando de GIT para clonar el proyecto, cuando termina navega a la carpeta del proyecto 'unq-ui-pablo-g-gonzalez-trabajo-final'. Si no usas GIT descarga el paquete desde el <a href="https://github.com/pablo1750/unq-ui-pablo-g-gonzalez-trabajo-final">repositorio</a>, descomprimí los archivos, colocalos en una carpeta local.
+
+###### Comando GIT:
+
+```Batchfile
+git clone --branch master https://github.com/pablo1750/unq-ui-pablo-g-gonzalez-trabajo-final.git
+```
+
+##### Cómo correr el juego:
+
+Con la consola navegá hasta la ubicación de descarga. Ejecuta el comando 'npm install', para instalar las dependencias, eso tarda un poco, cuando termina usa 'npm start' para correr el proyecto de manera local.
+NOTA: para volver a iniciar el proyecto solamente necesitás ejecutar 'npm start'.
 
 ##### Ejemplo con Windows:
 
