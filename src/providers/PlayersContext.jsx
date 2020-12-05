@@ -1,5 +1,4 @@
 import React from "react";
-import { coveredCard } from "../components/Cards";
 import { PLAYER_STATUS } from "../components/Player";
 
 // (A)

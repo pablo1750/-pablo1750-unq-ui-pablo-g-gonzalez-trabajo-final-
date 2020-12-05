@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PlayersContext, { addPlayer, nextPlayerIndex, removePlayer } from '../providers/PlayersContext';
-import { playerEmpty } from './Player';
+import { playerEmpty, PlayerIcon } from './Player';
 import { PlayerConfig } from './PlayerConfig';
 import { VictoriesCounter } from './VictoriesCounter';
 
 
-export const Players = (props) => {
+export const Players = ({onPlayersOkChange}) => {
   
-  const {onPlayersOkChange} = props;
   const [players, setPlayers] = useContext(PlayersContext);
   const [playersSlots, setPlayersSlots] = useState(()=>{
     let slots = [];
@@ -68,7 +67,10 @@ export const Players = (props) => {
 
             {players.map(player => 
               <li className="list-group-item d-flex justify-content-between align-items-center" key={`playerOk-${player.index}`}>
-                {player.name}
+                <span>
+                  <span className="m-1"><PlayerIcon type={player.type}/></span>
+                  {player.name}
+                </span>
                 <span>
                   <VictoriesCounter victories={player.victories}/>
                   <button className="btn btn-outline-primary btn-sm ml-2" onClick={() => {handleRemovePlayer(player)}}>
