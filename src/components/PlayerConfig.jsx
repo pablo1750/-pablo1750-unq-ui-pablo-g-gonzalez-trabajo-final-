@@ -22,10 +22,10 @@ export const PlayerConfig = (props) => {
 
   const handleTypeToggleClick = (event) => {
 
-    if(data.type == USER_TYPE.CPU){
+    if(data.type === USER_TYPE.CPU){
       handleHumanClick();
     }
-    if(data.type == USER_TYPE.HUMAN){
+    if(data.type === USER_TYPE.HUMAN){
       handleCpuClick();
     }
 
