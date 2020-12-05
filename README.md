@@ -2,21 +2,21 @@
 ------------
 
 ### Demo
-<a href="https://pablo1750.github.io/unq-ui-pablo-g-gonzalez-trabajo-final/">
+<a target="_blank" href="https://pablo1750.github.io/unq-ui-pablo-g-gonzalez-trabajo-final/">
   https://pablo1750.github.io/unq-ui-pablo-g-gonzalez-trabajo-final/
 </a>
 
 ------------
 ### Requerimientos
-<a href="https://nodejs.org/es/">Node.js</a> <br/>
-<a href="https://git-scm.com/downloads">GIT</a> (opcional)
+<a target="_blank" href="https://nodejs.org/es/">Node.js</a> <br/>
+<a target="_blank" href="https://git-scm.com/downloads">GIT</a> (opcional)
 
 ------------
 ### Instalación
 
 #### Descarga:
 
-Si usas GIT, con la consola navegá hasta la carpeta de destino y ejecutá el comando GIT para clonar el proyecto, cuando termina navega a la carpeta 'unq-ui-pablo-g-gonzalez-trabajo-final'. Si no usas GIT descarga el paquete desde el <a href="https://github.com/pablo1750/unq-ui-pablo-g-gonzalez-trabajo-final">repositorio</a>, descomprimí los archivos, colocalos en una carpeta local.
+Si usas GIT, con la consola navegá hasta la carpeta de destino y ejecutá el comando GIT para clonar el proyecto, cuando termina navega a la carpeta 'unq-ui-pablo-g-gonzalez-trabajo-final'. Si no usas GIT descarga el paquete desde el <a target="_blank" href="https://github.com/pablo1750/unq-ui-pablo-g-gonzalez-trabajo-final">repositorio</a>, descomprimí los archivos, colocalos en una carpeta local.
 
 ###### Comando GIT:
 
