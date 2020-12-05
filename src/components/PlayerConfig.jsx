@@ -44,9 +44,9 @@ export const PlayerConfig = (props) => {
 
   return (
     <>
-      <form className={`${error && "was-validated"} h-100`} onSubmit={handleSubmit} noValidate  style={{textAlign: "left"}}>
+      <form className="was-validated h-100" onSubmit={handleSubmit} noValidate  style={{textAlign: "left"}}>
         <div class="form-row">
-          <div class="col-md-8 mb-3">
+          <div class="col-md-8">
               <label for={`player${data.index}-name`}>Player {data.index}</label>
               <input id={`player${data.index}-name`} className="form-control form-control-sm" placeholder="Name" value={data.name} autoFocus={props.autoFocus} disabled={data.type === USER_TYPE.CPU} onChange={handleNameChange} required maxLength={30}/>
               {error &&  
@@ -55,7 +55,7 @@ export const PlayerConfig = (props) => {
                 </div>
               }
           </div>
-          <div class="col-md-4 mb-3">
+          <div class="col-md-4">
             <label style={{color:"transparent"}}>Type</label>
             <div class="custom-control custom-switch">
               <input id={`player${data.index}-type`} type="checkbox" class="custom-control-input" onClick={handleTypeToggleClick}/>
@@ -64,10 +64,8 @@ export const PlayerConfig = (props) => {
           </div>
         </div>
         <div class="form-row">
-          <div class="col-md-12 mb-3">
-              {data.type === USER_TYPE.CPU && false && <button type="button" className="btn btn-outline-secondary" onClick={handleHumanClick}>HUMAN</button>}
-              {data.type === USER_TYPE.HUMAN && false && <button type="button" className="btn btn-outline-secondary" onClick={handleCpuClick}>CPU</button>}
-              {!data.readonly && <button className="btn btn-danger m-1" onClick={() => props.onCancelPlayer()}>Cancel</button>}
+          <div class="col-md-12 mt-3">
+              {!data.readonly && <button className="btn btn-outline-danger m-1" onClick={() => props.onCancelPlayer()}>Cancel</button>}
               <button type="submit" className="btn btn-success m-1">Confirm</button>
           </div>
         </div>

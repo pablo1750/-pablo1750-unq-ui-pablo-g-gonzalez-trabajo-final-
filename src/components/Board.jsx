@@ -112,9 +112,7 @@ export const Board = (props) => {
     setData({...data, state: ROUND_STATE.PLAYER_READY});
   }
 
-
   const autoShowCards = () => {
-    
     Swal.fire({
       title: 'RPSLS!',
       html: 'All players have chosen.',
@@ -127,37 +125,14 @@ export const Board = (props) => {
         handleShowResults()
       }
     }).then((result) => {
-
     })
   } 
-
-  const handleRulesClick = () => {
-
-    Swal.fire({
-      title: 'RPSLS Game Rules',
-      html: 
-      '<div style="text-align:left">' +
-      'Scissors cuts Paper<br/>' + 
-      'Paper covers Rock<br/>' + 
-      'Rock crushes Lizard<br/>' + 
-      'Lizard poisons Spock<br/>' + 
-      'Spock smashes Scissors<br/>' + 
-      'Scissors decapitates Lizard<br/>' + 
-      'Lizard eats Paper<br/>' + 
-      'Paper disproves Spock<br/>' + 
-      'Spock vaporizes Rock<br/>' + 
-      '(and as it always has) Rock crushes Scissors' +
-      '</div'
-      ,
-    });
-  }
 
   return (
     <>
       <div className="row" style={{minHeight: "55px"}}>
         <div className="col col-12 mh-100">
           <button className="btn btn-danger m-1" onClick={() => {props.onExitBoard(data.players)}}>Exit</button>
-          <button className="btn btn-info m-1" onClick={handleRulesClick}>Rules</button>
           {data.state === ROUND_STATE.END_ROUND && <button className="btn btn-info m-1" onClick={handleShowCards}>Show Cards</button>}
           {data.state === ROUND_STATE.SHOW_RESULTS && data.roundHasWinner && <button className="btn btn-success m-1" onClick={handleNextRound}>Next Round</button>}
           {data.state === ROUND_STATE.SHOW_RESULTS && !data.roundHasWinner && <button className="btn btn-warning m-1" onClick={handleNextRound}>Tie-breaker</button>}
